@@ -1,4 +1,4 @@
-# myweb2 0.1.1
+# myweb2 0.1.2
 
 
 # Vue 3 + Vite
