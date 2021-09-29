@@ -1,0 +1,75 @@
+<template>
+  <el-container>
+    <el-aside width="200px"><Menu /></el-aside>
+    <el-container>
+      <el-header height="55px">发版系统</el-header>
+      <el-main v-loading="loading"><router-view></router-view></el-main>
+    </el-container>
+  </el-container>
+
+</template>
+
+<script>
+import Menu from './components/auth/Menu.vue'
+export default {
+  name: 'App',
+  data() {
+    return {
+      loading: false
+    }
+  },
+  components: {
+    Menu
+  },
+  methods: {
+    showLoading(loading) {
+      this.loading = loading
+    }
+  }
+}
+</script>
+
+<style>
+body {
+  margin:0;
+}
+</style>
+
+<style scoped>
+
+
+.el-header, .el-footer {
+  background-color: #B3C0D1;
+  color: #333;
+  text-align: center;
+  line-height: 55px;
+}
+
+.el-aside {
+  background-color: #D3DCE6;
+  color: #333;
+  line-height: 200px;
+}
+
+.el-main {
+  background-color: #E9EEF3;
+  color: #333;
+  padding: 2px;
+}
+
+body > .el-container {
+  margin-bottom:1px;
+}
+
+
+
+.el-container:nth-child(5) .el-aside,
+.el-container:nth-child(6) .el-aside {
+  line-height: 260px;
+}
+
+.el-container:nth-child(7) .el-aside {
+  line-height: 320px;
+}
+
+</style>
