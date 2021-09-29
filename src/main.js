@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
-import installElementPlus from './plugins/element'
+// import installElementPlus from './plugins/element'
+import ElementPlus from 'element-plus';
 import 'element-plus/lib/theme-chalk/index.css';
 import router from './router'
 import App from './App.vue'
@@ -9,9 +10,9 @@ import VueAxios from 'vue-axios'
 import qs from 'qs'
 import { ElMessage } from 'element-plus'
 
-
 const app = createApp(App)
-installElementPlus(app)
+// installElementPlus(app, {size:''})
+app.use(ElementPlus, {size:'mini'})
 
 app.use(router)
 app.mount('#app')

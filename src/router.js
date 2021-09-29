@@ -45,6 +45,8 @@ router.addRoute('Home', {
 router.addRoute('Home', {path:'/test/Example11', component:() => import('./components/test/Example11.vue')})
 router.addRoute('Home', {path:'/test/Example12', component:() => import('./components/test/Example12.vue')})
 
+router.addRoute('Home', {path:'/test/Example21', component:() => import('./components/test/Example21.vue')})
+router.addRoute('Home', {path:'/test/Example22', component:() => import('./components/test/Example22.vue')})
 
 router.addRoute('Home', {path:'/test/Example', component:() => import('./components/test/Example.vue')})
 
