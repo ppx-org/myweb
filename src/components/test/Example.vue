@@ -43,7 +43,7 @@
 </template>
 
 <script>
-    const ctrl = "/test/example/page"
+    const ctrl = "/test/example/"
     export default {
         data() {
             return {
@@ -62,11 +62,13 @@
         methods: {
             queryPage() {
                 let params = this.$refs.Page.getParams(this.form);
-                // this.axios.get(`${ctrl}queryPage?${params}`).then((res) => {
-                //     this.$refs.Page.setPage(res);
-                //     this.tableData = res.data;
-                //     this.showLoading(false);
-                // })
+                this.axios.get(`${ctrl}page`, params).then((res) => {
+                  console.log(">>>>>>>>>>>>res")
+                  console.log(res)
+                  this.$refs.Page.setPage(res.data);
+                  this.tableData = res.data.content;
+                  this.showLoading(false);
+                })
             }
         },
         mounted() {

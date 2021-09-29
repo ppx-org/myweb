@@ -26,12 +26,12 @@ export default {
         getParams(formObject) {
             let paraPage = {...this.page}
             paraPage.total = null;
-            return this.utils.stringify(paraPage) + "&" + this.utils.stringify(formObject);
+            return Object.assign({}, paraPage, formObject);
         },
         setPage(backJson) {
-            this.page.size = backJson.page.size;
-            this.page.total = backJson.page.total;
-            this.page.current = backJson.page.current;
+            this.page.size = backJson.pageable.pageSize;
+            this.page.total = backJson.pageable.pageSize;
+            this.page.current = backJson.pageable.pageNumber;
         },
         setOrder(sort) {
             // exampleDate descending|ascending
