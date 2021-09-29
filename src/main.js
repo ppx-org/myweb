@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import installElementPlus from './plugins/element'
+import 'element-plus/lib/theme-chalk/index.css';
 import router from './router'
 import App from './App.vue'
 
@@ -15,6 +16,12 @@ installElementPlus(app)
 app.use(router)
 app.mount('#app')
 app.use(VueAxios, axios)
+
+
+// 全局组件
+import Page from '/src/components/common/Page.vue'
+app.component("my-page", Page)
+
 
 // axios
 axios.defaults.baseURL = "/api"
