@@ -30,8 +30,17 @@ export default {
 </script>
 
 <style>
-body {
+
+html, body {
   margin:0;
+  height: 100%;
+}
+#app {
+  height: 100%;
+  min-width: 1300px;
+}
+.el-container  {
+  height: 100%;
 }
 </style>
 
