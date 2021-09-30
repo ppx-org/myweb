@@ -34,11 +34,13 @@ axios.interceptors.request.use(
         if (token) {
             config.headers.Authorization = "Bearer " + token;
         }
-        config.data = utils.stringify(config.data);
 
-        //if (config.method == 'get') {
-            config.params = utils.cleanEmpty(config.params);
-       // }
+        if (config.method == 'get') {
+            utils.deleteEmptyAttr(config.params);
+        }
+        else if (config.method == 'post') {
+            config.data = utils.stringify(config.data);
+        }
         return config;
     },
     err => {

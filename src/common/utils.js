@@ -14,14 +14,12 @@ let utils = {
             }, arrayFormat: 'repeat'});
         return r;
     },
-    cleanEmpty(getParams) {
-        let returnObj = {}
+    deleteEmptyAttr(getParams) {
         for (let key in getParams) {
-            if (getParams[key] != null && getParams[key] != '') {
-                returnObj[key] = getParams[key];
+            if (getParams[key] == null || getParams[key] == '') {
+                delete getParams[key];
             }
         }
-        return returnObj;
     }
 }
 

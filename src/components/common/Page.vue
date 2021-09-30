@@ -7,26 +7,23 @@
 
 <script>
 export default {
-    props: ["query"],
+  props: ["query"],
     data() {
-        return {
-            page: {
-                size: 3,
-                page: 1,
-                total: 0,
-                sort: [],
-                dir: []
-            }
+      return {
+        page: {
+          size: 3, page: 0, total: 0,  sort: [], dir: []
         }
+      }
     },
     methods: {
         queryPage() {
             this.query();
         },
         getParams(formObject) {
-            let paraPage = {...this.page}
-            paraPage.total = null;
-            let r = Object.assign({}, paraPage, formObject);
+            // let paraPage = {...this.page}
+            // paraPage.total = null;
+            // paraPage.page = paraPage.vPage - 1;
+            let r = Object.assign({page: this.page.page -1, size: this.page.size}, formObject);
             console.log(">>> request getParams")
             console.log(r)
             return r;
