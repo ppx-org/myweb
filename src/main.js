@@ -7,8 +7,9 @@ import App from './App.vue'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import qs from 'qs'
 import { ElMessage } from 'element-plus'
+
+import {utils} from './common/utils'
 
 const app = createApp(App)
 // installElementPlus(app, {size:''})
@@ -25,6 +26,7 @@ app.component("my-page", Page)
 
 
 // axios
+
 axios.defaults.baseURL = "/api"
 axios.interceptors.request.use(
     config => {
@@ -32,7 +34,11 @@ axios.interceptors.request.use(
         if (token) {
             config.headers.Authorization = "Bearer " + token;
         }
-        config.data = qs.stringify(config.data)
+        config.data = utils.stringify(config.data);
+
+        //if (config.method == 'get') {
+            config.params = utils.cleanEmpty(config.params);
+       // }
         return config;
     },
     err => {

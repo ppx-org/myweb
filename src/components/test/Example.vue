@@ -61,14 +61,15 @@
         },
         methods: {
             queryPage() {
-                let params = this.$refs.Page.getParams(this.form);
-                this.axios.get(`${ctrl}page`, params).then((res) => {
-                  console.log(">>>>>>>>>>>>res")
-                  console.log(res)
-                  this.$refs.Page.setPage(res.data);
-                  this.tableData = res.data.content;
-                  this.showLoading(false);
-                })
+              let params = this.$refs.Page.getParams(this.form);
+              console.log(">>> xxxxxxxxxxxxx");
+              console.log(params)
+              this.axios.get(`${ctrl}page`, {params}).then((res) => {
+                console.log(">>>>>>>>>>>>res")
+                console.log(res)
+                this.$refs.Page.setPage(res.data);
+                this.tableData = res.data.content;
+              })
             }
         },
         mounted() {
