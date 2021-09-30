@@ -10,6 +10,7 @@ import VueAxios from 'vue-axios'
 import { ElMessage } from 'element-plus'
 
 import {utils} from './common/utils'
+import './common.css'
 
 const app = createApp(App)
 // installElementPlus(app, {size:''})
