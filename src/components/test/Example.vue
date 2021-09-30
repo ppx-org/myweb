@@ -22,7 +22,7 @@
     </el-form>
 
     <el-table @sort-change="(v) => this.$refs.Page.setOrder(v)" :data="tableData" border style="width: 100%">
-        <el-table-column sortable="custom" prop="exampleName" label="exampleName"></el-table-column>
+        <el-table-column prop="exampleName" label="exampleName" sortable="custom"></el-table-column>
         <el-table-column prop="exampleType" label="exampleType" :formatter="(v) => dict.exampleType[v.exampleType]"></el-table-column>
         <el-table-column prop="exampleTime" label="exampleTime" width="180"></el-table-column>
         <el-table-column prop="exampleTime" label="创建时间" width="180"></el-table-column>

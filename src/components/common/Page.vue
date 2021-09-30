@@ -34,12 +34,12 @@ export default {
             // this.page.page = backJson.pageable.pageNumber + 1;
         },
         setOrder(sort) {
+            console.log(sort.column)
             // exampleDate descending|ascending
             // sort=firstname&sort=lastname,desc
             sort.prop = sort.prop == null ? "" : sort.prop;
             sort.order = sort.order == null ? "" : sort.order;
-            this.page.sort = [sort.prop + "," + sort.order];
-            // this.page.dir = [sort.order.replace("ending", "")];
+            this.page.sort = [sort.prop + "," + sort.order.replace("ending", "")];
             this.query();
         }
     }
