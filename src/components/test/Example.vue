@@ -13,18 +13,18 @@
             </el-select>
         </el-form-item>
         <el-form-item label="日期">
-            <el-date-picker v-model="form.exampleDate" type="date"></el-date-picker>
+            <el-date-picker v-model="form.exampleDate" type="date" value-format="YYYY-MM-DD"></el-date-picker>
         </el-form-item>
         <el-form-item label="时间">
-            <el-date-picker v-model="form.exampleTime" type="datetime"></el-date-picker>
+            <el-date-picker v-model="form.exampleTime" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"></el-date-picker>
         </el-form-item>
         <el-form-item><el-button type="primary" @click="queryPage">查询</el-button></el-form-item>
     </el-form>
 
     <el-table @sort-change="(v) => this.$refs.Page.setOrder(v)" :data="tableData" border style="width: 100%">
-        <el-table-column prop="exampleName" label="exampleName"></el-table-column>
+        <el-table-column sortable="custom" prop="exampleName" label="exampleName"></el-table-column>
         <el-table-column prop="exampleType" label="exampleType" :formatter="(v) => dict.exampleType[v.exampleType]"></el-table-column>
-        <el-table-column sortable="custom" prop="exampleTime" label="exampleTime" width="180"></el-table-column>
+        <el-table-column prop="exampleTime" label="exampleTime" width="180"></el-table-column>
         <el-table-column prop="exampleTime" label="创建时间" width="180"></el-table-column>
         <el-table-column label="操作">
             <template #default="scope">

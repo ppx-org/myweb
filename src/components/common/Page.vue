@@ -11,7 +11,7 @@ export default {
     data() {
       return {
         page: {
-          size: 3, page: 0, total: 0,  sort: [], dir: []
+          size: 3, page: 1, total: 0,  sort: []
         }
       }
     },
@@ -23,7 +23,7 @@ export default {
             // let paraPage = {...this.page}
             // paraPage.total = null;
             // paraPage.page = paraPage.vPage - 1;
-            let r = Object.assign({page: this.page.page -1, size: this.page.size}, formObject);
+            let r = Object.assign({page: this.page.page - 1, size: this.page.size, sort: this.page.sort}, formObject);
             console.log(">>> request getParams")
             console.log(r)
             return r;
@@ -35,11 +35,11 @@ export default {
         },
         setOrder(sort) {
             // exampleDate descending|ascending
-            sort.prop = sort.prop === null ? "" : sort.prop;
-            sort.order = sort.order === null ? "" : sort.order;
-
-            this.page.sort = [sort.prop];
-            this.page.dir = [sort.order.replace("ending", "")];
+            // sort=firstname&sort=lastname,desc
+            sort.prop = sort.prop == null ? "" : sort.prop;
+            sort.order = sort.order == null ? "" : sort.order;
+            this.page.sort = [sort.prop + "," + sort.order];
+            // this.page.dir = [sort.order.replace("ending", "")];
             this.query();
         }
     }

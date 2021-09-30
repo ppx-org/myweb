@@ -28,6 +28,13 @@ app.component("my-page", Page)
 // axios
 
 axios.defaults.baseURL = "/api"
+axios.defaults.paramsSerializer = function(params) {
+    return utils.stringify(params);
+}
+
+
+
+
 axios.interceptors.request.use(
     config => {
         let token = localStorage.getItem("my_token");
@@ -35,9 +42,9 @@ axios.interceptors.request.use(
             config.headers.Authorization = "Bearer " + token;
         }
 
-        if (config.method == 'get') {
-            utils.deleteEmptyAttr(config.params);
-        }
+        // if (config.method == 'get') {
+        //     utils.deleteEmptyAttr(config.params);
+        // }
         else if (config.method == 'post') {
             config.data = utils.stringify(config.data);
         }
