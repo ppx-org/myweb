@@ -18,6 +18,7 @@ export default defineComponent({
     return {
       locale: zhCn,
     }
-  },
+  }
 })
 </script>
+

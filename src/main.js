@@ -15,10 +15,11 @@ import './common.css'
 const app = createApp(App)
 // installElementPlus(app, {size:''})
 app.use(ElementPlus, {size:'mini'})
-
 app.use(router)
-app.mount('#app')
 app.use(VueAxios, axios)
+let appInstance = app.mount('#app')
+
+// app.config.globalProperties.showLoading = appInstance.showLoading;
 
 
 // 全局组件
