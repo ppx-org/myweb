@@ -4,7 +4,6 @@ import ElementPlus from 'element-plus';
 import 'element-plus/lib/theme-chalk/index.css';
 import router from './router'
 import App from './App.vue'
-import Home from './Home.vue'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
@@ -78,8 +77,8 @@ axios.interceptors.response.use(
     error => {
         // 统一异常处理
         console.log(error);
-        let message = "";
-        if (error.isAxiosError && error.message == "Network Error") {
+        let message;
+        if (error.isAxiosError && error.message === "Network Error") {
             message = "网络异常,URL:" + error.config.url;
         }
         else {

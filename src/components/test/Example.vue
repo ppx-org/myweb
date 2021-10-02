@@ -86,7 +86,6 @@
 
 <script>
 const ctrl = "/test/example/"
-import { getCurrentInstance } from 'vue'
 export default {
   data() {
     return {
