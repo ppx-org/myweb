@@ -54,7 +54,7 @@ axios.interceptors.request.use(
         // if (config.method == 'get') {
         //     utils.deleteEmptyAttr(config.params);
         // }
-        if (config.method == 'post') {
+        if (config.method === 'post') {
             config.data = utils.stringify(config.data);
         }
         return config;

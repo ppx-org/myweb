@@ -9,7 +9,7 @@
     </el-form-item>
     <el-form-item label="类型" style="width:150px">
       <el-select v-model="form.exampleType" placeholder="类型">
-        <el-option v-for="(l,v) in dict.exampleType" :label="l" :value="v"></el-option>
+        <el-option :key="v" v-for="(l,v) in dict.exampleType" :label="l" :value="v"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="日期">
@@ -29,9 +29,9 @@
     <el-table-column prop="exampleTime" label="exampleTime" width="180"></el-table-column>
     <el-table-column prop="exampleTime" label="创建时间" width="180"></el-table-column>
     <el-table-column label="操作">
-      <template #default="scope">
-        <el-button size="mini" @click="edit(scope.row.exampleId)">编辑</el-button>
-        <el-popconfirm title="确定删除吗？" @confirm="del(scope.row.exampleId)">
+      <template v-slot="col">
+        <el-button size="mini" @click="edit(col.row.exampleId)">编辑</el-button>
+        <el-popconfirm title="确定删除吗？" @confirm="del(col.row.exampleId)">
           <template #reference>
             <el-button size="mini" type="danger">删除</el-button>
           </template>
@@ -48,7 +48,7 @@
       </el-form-item>
       <el-form-item label="类型">
         <el-select v-model="addForm.exampleType" style="width: 300px;">
-          <el-option v-for="(l,v) in dict.exampleType" :label="l" :value="v"></el-option>
+          <el-option v-for="(l,v) in dict.exampleType" :label="l" :value="v" :key="v"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="日期">
@@ -71,7 +71,7 @@
       <el-form-item label="客户"><el-input v-model="editForm.exampleName"></el-input></el-form-item>
       <el-form-item label="类型">
         <el-select v-model="editForm.exampleType" placeholder="类型">
-          <el-option v-for="(l,v) in dict.exampleType" :label="l" :value="v"></el-option>
+          <el-option v-for="(l,v) in dict.exampleType" :label="l" :value="v" :key="v"></el-option>
         </el-select>
       </el-form-item>
     </el-form>
@@ -91,6 +91,7 @@ export default {
     return {
       tableData: [],
       form: {
+        exampleId: '',
         exampleName: '',
         exampleType: '',
         exampleDate: '',
