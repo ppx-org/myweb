@@ -86,6 +86,7 @@
 
 <script>
 const ctrl = "/test/example/"
+import { getCurrentInstance } from 'vue'
 export default {
   data() {
     return {
@@ -128,8 +129,10 @@ export default {
       })
     },
     edit(id) {
+      this.showLoading();
       this.axios.get(`${ctrl}get?id=${id}`).then((res) => {
-        this.editForm = res.data.content
+        this.hideLoading();
+        this.editForm = res.data.content;
         this.editFormV = true;
       })
     },
@@ -146,7 +149,7 @@ export default {
     },
   },
   mounted() {
-    // this.showLoading(true);
+
     this.queryPage();
     this.addForm.exampleType = 't';
   }

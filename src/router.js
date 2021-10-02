@@ -8,6 +8,7 @@ import Home from './Home.vue'
 import Login from './Login.vue'
 
 const routerHistory = createWebHistory()
+
 const router = createRouter({
     history: routerHistory,
     routes: [{

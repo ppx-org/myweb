@@ -9,6 +9,7 @@
 
 </template>
 
+
 <script>
 import Menu from './components/auth/Menu.vue'
 export default {
@@ -22,9 +23,22 @@ export default {
     Menu
   },
   methods: {
-    showLoading(loading) {
-      this.loading = loading
+    showLoading() {
+      this.loadingStatus = true;
+      setTimeout(function (thisObj) {
+        if (thisObj.loadingStatus) {
+          thisObj.loading = true
+        }
+      }, 300, this)
+    },
+    hideLoading() {
+      this.loadingStatus = false;
+      this.loading = false
     }
+  },
+  created() {
+    this.setShowLoading(this.showLoading)
+    this.setHideLoading(this.hideLoading)
   }
 }
 </script>

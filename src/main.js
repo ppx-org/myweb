@@ -4,6 +4,7 @@ import ElementPlus from 'element-plus';
 import 'element-plus/lib/theme-chalk/index.css';
 import router from './router'
 import App from './App.vue'
+import Home from './Home.vue'
 
 import axios from 'axios'
 import VueAxios from 'vue-axios'
@@ -17,10 +18,17 @@ const app = createApp(App)
 app.use(ElementPlus, {size:'mini'})
 app.use(router)
 app.use(VueAxios, axios)
-let appInstance = app.mount('#app')
+app.mount('#app')
 
 // app.config.globalProperties.showLoading = appInstance.showLoading;
 
+app.config.globalProperties.loadingStatus = false;
+app.config.globalProperties.setShowLoading = function(f) {
+    app.config.globalProperties.showLoading = f
+}
+app.config.globalProperties.setHideLoading = function(f) {
+    app.config.globalProperties.hideLoading = f
+}
 
 // 全局组件
 import Page from '/src/components/common/Page.vue'
