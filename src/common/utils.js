@@ -13,14 +13,7 @@ let utils = {
                 return value;
             }, arrayFormat: 'repeat'});
         return r;
-    },
-    // deleteEmptyAttr(getParams) {
-    //     for (let key in getParams) {
-    //         if (getParams[key] === null || getParams[key] === '') {
-    //             delete getParams[key];
-    //         }
-    //     }
-    // }
+    }
 }
 
 export {utils};

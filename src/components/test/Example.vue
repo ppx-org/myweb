@@ -129,9 +129,7 @@ export default {
       })
     },
     edit(id) {
-      this.showLoading();
       this.axios.get(`${ctrl}get?id=${id}`).then((res) => {
-        this.hideLoading();
         this.editForm = res.data.content;
         this.editFormV = true;
       })
@@ -149,7 +147,6 @@ export default {
     },
   },
   mounted() {
-
     this.queryPage();
     this.addForm.exampleType = 't';
   }

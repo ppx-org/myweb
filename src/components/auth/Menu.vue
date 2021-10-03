@@ -9,9 +9,9 @@
               background-color="#545c64"
               text-color="#fff"
               active-text-color="#ffd04b">
-        <el-submenu :index="dIndex + ''" v-for="(m, dIndex) in menu">
+        <el-submenu :key="m.id" :index="dIndex + ''" v-for="(m, dIndex) in menu">
           <template #title><i class="el-icon-menu"></i><span>{{m.title}}</span></template>
-          <el-menu-item :index="s.path" v-for="(s, mIndex) in m.sub">{{s.title}}</el-menu-item>
+          <el-menu-item :key="s.id" :index="s.path" v-for="(s) in m.sub">{{s.title}}</el-menu-item>
         </el-submenu>
       </el-menu>
     </el-col>

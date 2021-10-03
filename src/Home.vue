@@ -37,8 +37,14 @@ export default {
     }
   },
   created() {
-    this.setShowLoading(this.showLoading)
-    this.setHideLoading(this.hideLoading)
+    this.setShowLoading(this.showLoading);
+    this.setHideLoading(this.hideLoading);
+    this.setLoadingAuto(true);
+  },
+  watch: {
+    '$route'() {
+      this.setLoadingAuto(true);
+    }
   }
 }
 </script>
