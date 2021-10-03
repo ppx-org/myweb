@@ -11,7 +11,7 @@
 
 
 <script>
-import Menu from './components/auth/Menu.vue'
+import Menu from './components/security/Menu.vue'
 export default {
   name: 'App',
   data() {
