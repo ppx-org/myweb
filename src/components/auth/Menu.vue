@@ -11,7 +11,7 @@
               active-text-color="#ffd04b">
         <el-submenu :key="m.id" :index="dIndex + ''" v-for="(m, dIndex) in menu">
           <template #title><i class="el-icon-menu"></i><span>{{m.title}}</span></template>
-          <el-menu-item :key="s.id" :index="s.path" v-for="(s) in m.sub">{{s.title}}</el-menu-item>
+          <el-menu-item :key="s.id" :index="s.path" v-for="(s) in m.sub" class="menu-title">{{s.title}}</el-menu-item>
         </el-submenu>
       </el-menu>
     </el-col>
@@ -47,11 +47,10 @@ export default {
   .el-col-12 {max-width:200px;width:200px}
   .el-submenu .el-menu-item {min-width:auto}
 
-
-  .test {
-    width: 100%; /*根据自己项目进行定义宽度*/
-    overflow: hidden; /*设置超出的部分进行影藏*/
-    text-overflow: ellipsis; /*设置超出部分使用省略号*/
-    white-space: nowrap; /*设置为单行*/
+  .menu-title {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 </style>
