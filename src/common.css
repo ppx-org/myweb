@@ -7,3 +7,7 @@
 .my-pagination .el-pager {
   margin-top: -1px;
 }
+
+.el-loading-mask {
+  z-index: 9999;
+}

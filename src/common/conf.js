@@ -45,6 +45,7 @@ let initConf = function(app) {
             return config;
         },
         err => {
+            console.log(err);
             return Promise.reject(err);
         }
     );
