@@ -10,19 +10,41 @@
              background-color="#545c64"
              text-color="#fff"
              active-text-color="#ffd04b">
-      <el-submenu :key="m.id" :index="m.id" v-for="(m) in menu">
-        <template #title><i class="el-icon-menu"></i><span>{{m.title}}</span>
-          <el-button @click.stop="addMenu(m)" style="float:right;margin-right:25px;margin-top:15px">新增菜单</el-button>
+      <el-submenu :key="d.id" :index="d.id + ''" v-for="(d) in menu">
+        <template #title><span @click.stop="itemClick(d)" class="my_title" :id="'title_' + d.id"><i class="el-icon-menu"></i>{{d.title}}</span>
+          <el-button @click.stop="addMenu(d)" style="float:right;margin-right:25px;margin-top:15px">新增菜单</el-button>
         </template>
-        <el-menu-item :key="s.id" :index="s.id" v-for="(s) in m.sub" class="menu-title">{{s.title}}</el-menu-item>
-
-<!--        <el-submenu index="100">-->
-<!--          <template #title>item four</template>-->
-<!--          <el-menu-item index="101">item one</el-menu-item>-->
-<!--        </el-submenu>-->
+        <el-submenu :key="m.id" :index="m.id + ''" v-for="(m) in d.sub" class="menu-title">
+          <template #title><span @click.stop="itemClick(m)" class="my_title" :id="'title_' + m.id">{{m.title}}</span></template>
+          <el-menu-item @click="itemClick(o)" :key="o.id" :index="o.id + ''" v-for="(o) in m.sub">
+            <span class="my_title" :id="'title_' + o.id"><i class="el-icon-s-operation"></i>{{o.title}}</span>
+          </el-menu-item>
+        </el-submenu>
       </el-submenu>
     </el-menu>
   </el-col>
+
+  <div style="display: flex">
+    <div style="width: 300px">
+      <div>title</div>
+      <div>
+        <div>test.........1 <a class="el-icon-delete"></a></div>
+        <div>test.........2 <a class="el-icon-delete"></a></div>
+      </div>
+    </div>
+    <div style="">
+      <div>
+<!--        <el-select placeholder="模块">-->
+<!--          <el-option>/test/</el-option>-->
+<!--        </el-select>-->
+      </div>
+      <div>
+        <div>test.........1 <a class="el-icon-delete"></a></div>
+        <div>test.........2 <a class="el-icon-delete"></a></div>
+      </div>
+    </div>
+
+  </div>
 
   <el-dialog title="新增" v-model="addFormV" :close-on-click-modal="false" width="450px">
     <el-form ref="addForm" :model="addForm" :rules="rules" label-width="80px">
@@ -85,11 +107,21 @@ export default {
     }
   },
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
+    handleSelected(key) {
+      let x = document.querySelectorAll(".my_title");
+      for (let i = 0; i < x.length; i++) {
+        x[i].classList.remove("res-selected");
+        x[i].classList.add("res-no-select");
+      }
+      document.getElementById("title_" + key).classList.remove("res-no-select");
+      document.getElementById("title_" + key).classList.add("res-selected");
     },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
+    handleOpen(key) {
+    },
+    handleClose(key) {
+    },
+    itemClick(o) {
+      this.handleSelected(o.id);
     },
     test() {
       alert(222);
@@ -132,4 +164,13 @@ export default {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+.res-selected {
+  color: rgb(255, 208, 75);
+}
+.res-no-select {
+  color: white;
+}
+
+
 </style>
