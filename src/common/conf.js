@@ -80,6 +80,7 @@ let initConf = function(app) {
                 message = error + "\n" + error.response;
             }
             ElMessage.error(message)
+            g.hideLoading();
             return Promise.reject(error);
         }
     );

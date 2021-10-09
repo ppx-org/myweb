@@ -18,9 +18,9 @@ initConf(app);
 import Page from '/src/components/common/Page.vue'
 app.component("my-page", Page)
 
-console.log("xxxxx>>>>>>>>")
-console.log(import.meta.env.MODE)
-console.log(import.meta.env.VITE_SOME_KEY)
+// console.log("xxxxx>>>>>>>>")
+// console.log(import.meta.env.MODE)
+// console.log(import.meta.env.VITE_SOME_KEY)
 
 
 
