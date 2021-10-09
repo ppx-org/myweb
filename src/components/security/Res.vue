@@ -15,16 +15,17 @@
              active-text-color="#ffd04b">
       <el-submenu :key="d.id" :index="d.id + ''" v-for="(d) in menu">
         <template #title>
-          <span @click.stop="itemClick(d)" class="my_title" :id="'title_' + d.id"><i class="el-icon-menu"></i>{{d.title}}</span>
-          <el-button @click.stop="addMenu(d)" style="float:right;margin-right:25px;margin-top:15px">新增菜单</el-button>
+          <span @click.stop="itemClick(d)" class="my_title" :id="'title_' + d.id"><i class="el-icon-folder"></i>{{d.title}}</span>
+          <el-button @click.stop="editDir(d)" style="float:right;margin-right:25px;margin-top:15px">修改</el-button>
+          <el-button @click.stop="addMenu(d)" style="float:right;margin-right:15px;margin-top:15px">+菜单</el-button>
         </template>
         <el-submenu :key="m.id" :index="m.id + ''" v-for="(m) in d.sub" class="menu-title">
           <template #title>
-            <span @click.stop="itemClick(m)" class="my_title" :id="'title_' + m.id">{{m.title}}</span>
-            <el-button @click.stop="addOperate(m)" style="float:right;margin-right:25px;margin-top:15px">新增操作</el-button>
+            <span @click.stop="itemClick(m)" class="my_title" :id="'title_' + m.id" ><i class="el-icon-menu"></i>{{m.title}}</span>
+            <el-button @click.stop="addOperate(m)" style="float:right;margin-right:25px;margin-top:15px">+操作</el-button>
           </template>
           <el-menu-item @click="itemClick(o)" :key="o.id" :index="o.id + ''" v-for="(o) in m.sub">
-            <span class="my_title" :id="'title_' + o.id"><i class="el-icon-s-operation"></i>{{o.title}}</span>
+            <span class="my_title" :id="'title_' + o.id"><i class="el-icon-setting"></i>{{o.title}}</span>
           </el-menu-item>
         </el-submenu>
       </el-submenu>
@@ -80,6 +81,28 @@
     </template>
   </el-dialog>
 
+  <el-dialog title="修改" v-model="editFormV" :close-on-click-modal="false" width="450px">
+    <el-form ref="editForm" :model="editForm" :rules="rules" label-width="80px">
+      <el-form-item label="资源类型">
+        <el-select v-model="editForm.resType" style="width: 300px;" disabled>
+          <el-option v-for="(l,v) in dict.resType" :label="l" :value="v" :key="v"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="资源名称" prop="resName">
+        <el-input v-model="editForm.resName" style="width: 300px;"></el-input>
+      </el-form-item>
+      <el-form-item v-if="editMenuPathV" label="菜单URI" prop="menuPath">
+        <el-input v-model="editForm.menuPath" style="width: 300px;"></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+            <span class="dialog-footer">
+              <el-button @click="editFormV = false">取 消</el-button>
+              <el-button type="primary" @click="editRes">确 定</el-button>
+            </span>
+    </template>
+  </el-dialog>
+
 </template>
 
 <script>
@@ -91,15 +114,16 @@ export default {
     let selectedResId = -1;
     let selectedTitle = "无";
     const addFormV = ref(false);
+    const editFormV = ref(false);
     const menuPathV = ref(false);
+    const editMenuPathV = ref(false);
     const queryModulePath = ref("");
     const resUriList = reactive([]);
     const queryUriList = reactive([]);
 
-
     return {
       selectedResId, selectedTitle,
-      addFormV, menuPathV,
+      addFormV, menuPathV, editFormV, editMenuPathV,
       queryModulePath, resUriList, queryUriList,
     }
   },
@@ -115,6 +139,7 @@ export default {
         menuPath: ''
       },
       addForm: {...this.form},
+      editForm: {...this.form},
       rules: {
         resName: [
           {required: true, message: '必填'}
@@ -170,17 +195,36 @@ export default {
       this.menuPathV = false;
       this.addFormV = true;
       this.addForm.resType = "o";
+      alert(m.id)
       this.addForm.resParentId = m.id;
     },
     insert() {
       this.$refs['addForm'].validate((valid) => {
         if (!valid) return;
         this.axios.post(`${ctrl}insert`, this.addForm).then(() => {
-          if (this.addForm.resParentId) {
-            this.$refs.menu.open(this.addForm.resParentId);
-          }
           this.loadAllRes();
+          if (this.addForm.resParentId) {
+            this.$nextTick(() => {
+              this.$refs.menu.open(this.addForm.resParentId);
+            });
+          }
           this.addFormV = false;
+        })
+      })
+    },
+    editDir(d) {
+      this.editMenuPathV = false;
+      this.editFormV = true;
+      this.editForm.resType = d.t;
+      this.editForm.resId = d.id;
+      this.editForm.resName = d.title;
+    },
+    editRes() {
+      this.$refs['editForm'].validate((valid) => {
+        if (!valid) return;
+        this.axios.post(`${ctrl}update`, this.editForm).then(() => {
+          this.loadAllRes();
+          this.editFormV = false;
         })
       })
     },

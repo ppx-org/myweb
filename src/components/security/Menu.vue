@@ -10,8 +10,8 @@
               text-color="#fff"
               active-text-color="#ffd04b">
         <el-submenu :key="m.id" :index="dIndex + ''" v-for="(m, dIndex) in menu">
-          <template #title><i class="el-icon-menu"></i><span>{{m.title}}</span></template>
-          <el-menu-item :key="s.id" :index="s.path" v-for="(s) in m.sub" class="menu-title">{{s.title}}</el-menu-item>
+          <template #title><i class="el-icon-folder"></i><span>{{m.title}}</span></template>
+          <el-menu-item :key="s.id" :index="s.path" v-for="(s) in m.sub" class="menu-title" style="margin-left:-10px"><i class="el-icon-menu"></i>{{s.title}}</el-menu-item>
         </el-submenu>
       </el-menu>
     </el-col>
