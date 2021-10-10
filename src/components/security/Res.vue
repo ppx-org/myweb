@@ -13,11 +13,14 @@
              background-color="#545c64"
              text-color="#fff"
              active-text-color="#ffd04b">
-      <el-submenu :key="d.id" :index="d.id + ''" v-for="(d) in menu">
+      <el-submenu :key="d.id" :index="d.id + ''" v-for="(d, dIndex) in menu">
         <template #title>
           <span @click.stop="itemClick(d)" class="my_title" :id="'title_' + d.id"><i class="el-icon-folder"></i>{{d.title}}</span>
-          <el-button @click.stop="editDir(d)" style="float:right;margin-right:25px;margin-top:15px">修改</el-button>
+          <el-button @click.stop="editDir(d, dIndex, menu.length)" style="float:right;margin-right:25px;margin-top:15px">修改</el-button>
           <el-button @click.stop="addMenu(d)" style="float:right;margin-right:15px;margin-top:15px">+菜单</el-button>
+          <el-popconfirm title="确定删除吗？" @confirm="delRes(d.id)" style="float:right;color:red;margin-top:18px">
+            <template #reference><i class="el-icon-delete"></i></template>
+          </el-popconfirm>
         </template>
         <el-submenu :key="m.id" :index="m.id + ''" v-for="(m) in d.sub" class="menu-title">
           <template #title>
@@ -94,6 +97,11 @@
       <el-form-item v-if="editMenuPathV" label="菜单URI" prop="menuPath">
         <el-input v-model="editForm.menuPath" style="width: 300px;"></el-input>
       </el-form-item>
+      <el-form-item label="资源排序" prop="resName">
+        <el-select v-model="editForm.resSort" style="width: 300px;">
+          <el-option v-for="(l) in tmpResSort" :label="l" :value="l" :key="l"></el-option>
+        </el-select>
+      </el-form-item>
     </el-form>
     <template #footer>
             <span class="dialog-footer">
@@ -121,10 +129,12 @@ export default {
     const resUriList = reactive([]);
     const queryUriList = reactive([]);
 
+    const tmpResSort = reactive([]);
     return {
       selectedResId, selectedTitle,
       addFormV, menuPathV, editFormV, editMenuPathV,
       queryModulePath, resUriList, queryUriList,
+      tmpResSort,
     }
   },
   data() {
@@ -136,6 +146,8 @@ export default {
         resName: '',
         resParentId: '',
         resType: '',
+        resSort: '',
+        resSortOld: '',
         menuPath: ''
       },
       addForm: {...this.form},
@@ -212,7 +224,15 @@ export default {
         })
       })
     },
-    editDir(d) {
+    editDir(d, dIndex, dSize) {
+      this.tmpResSort = [];
+      for (let i = 1; i <= dSize; i++) {
+        this.tmpResSort.push(i);
+      }
+      this.editForm.resSort = dIndex + 1;
+      this.editForm.resSortOld = dIndex + 1;
+      this.editForm.resParentId = d.pid;
+
       this.editMenuPathV = false;
       this.editFormV = true;
       this.editForm.resType = d.t;
@@ -226,6 +246,11 @@ export default {
           this.loadAllRes();
           this.editFormV = false;
         })
+      })
+    },
+    delRes(id) {
+      this.axios.post(`${ctrl}delResAndChildren`, {id:id}).then(() => {
+        this.loadAllRes();
       })
     },
     loadAllRes() {
@@ -266,7 +291,7 @@ export default {
 </script>
 
 <style scoped>
-.el-col-12 {max-width:400px;width:400px}
+.el-col-12 {max-width:450px;width:450px}
 .el-submenu .el-menu-item {min-width:auto}
 
 .menu-title {
