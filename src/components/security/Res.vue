@@ -1,6 +1,6 @@
 <template>
   <el-row style="margin-top:-15px;margin-bottom: 3px">
-  <el-button @click="addDir()" style="float:right;margin-right:25px;margin-top:15px">新增目录</el-button>
+    <el-button @click="addDir()" style="float:right;margin-right:25px;margin-top:15px">新增目录</el-button>
   </el-row>
   <el-col :span="12">
     <el-menu ref="menu" :default-active="activeIndex"
@@ -313,7 +313,7 @@ export default {
     resAddUri(uriPath) {
       for (let i = 0; i < this.resUriList.length; i++) {
         if (this.resUriList[i] === uriPath) {
-          this.ElMessage.warning("URI已经存在");
+          this.$message.warning("URI已经存在");
           return;
         }
       }
