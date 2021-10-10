@@ -13,7 +13,7 @@
     <el-table :data="tableData" border style="width: 600px">
       <el-table-column prop="roleName" label="角色名称" @click="test()">
         <template v-slot="col">
-          <a @click="test(col.row)" style="cursor: pointer">{{ col.row.roleName }}</a>
+          <el-link type="primary" @click="test(col.row)" href="#">{{ col.row.roleName }}</el-link>
         </template>
       </el-table-column>
     </el-table>
@@ -22,9 +22,8 @@
 
   <el-col :span="6" style="margin-left:10px">
     <el-form :inline="true" class="my-query-form">
-
       <el-form-item>
-        <el-button @click="saveRoleRes">保存</el-button>
+        <el-button type="primary" @click="saveRoleRes">保存</el-button>
       </el-form-item>
       <span>选中：{{selectedRoleName}}</span>
     </el-form>
@@ -69,8 +68,9 @@ export default {
       // listResIdByRole
       let params = {roleId:item.roleId};
       this.axios.get(`${ctrl}listResIdByRole`, {params}).then((res) => {
+        this.$refs.resTree.setCheckedNodes([])
         this.checkedKeys = res.data.content;
-      })
+      });
 
       this.selectedRoleId = item.roleId;
       this.selectedRoleName = item.roleName;

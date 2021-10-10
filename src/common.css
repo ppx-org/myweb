@@ -11,3 +11,8 @@
 .el-loading-mask {
   z-index: 9999;
 }
+
+.el-link.el-link--primary {
+  --el-link-font-color: var(--el-color-primary);
+  color: var(--el-link-font-color);
+}
