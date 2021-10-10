@@ -7,6 +7,10 @@ import {ElMessage} from "element-plus";
 let initConf = function(app) {
 
     let g = app.config.globalProperties;
+    // message
+    g.ElMessage = ElMessage;
+
+
     // axios >>>>>>>>>>
     app.use(VueAxios, axios);
 

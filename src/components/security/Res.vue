@@ -10,7 +10,7 @@
           <span @click.stop="itemClick(d)" class="my_title" :id="'title_' + d.id"><i class="el-icon-folder"></i>{{d.title}}</span>
           <el-button @click.stop="editDir(d, dIndex, menu.length)" style="float:right;margin-right:25px;margin-top:15px">修改</el-button>
           <el-button @click.stop="addMenu(d)" style="float:right;margin-right:15px;margin-top:15px">+菜单</el-button>
-          <el-popconfirm title="确定删除吗？" @confirm="delRes(d.id)" style="float:right;color:red;margin-top:18px">
+          <el-popconfirm title="确定删除吗？" @confirm="delRes(d.id)" style="float:right;margin-top:18px">
             <template #reference><i class="el-icon-delete"></i></template>
           </el-popconfirm>
         </template>
@@ -19,7 +19,7 @@
             <span @click.stop="itemClick(m)" class="my_title" :id="'title_' + m.id" ><i class="el-icon-menu"></i>{{m.title}}</span>
             <el-button @click.stop="editMenu(m, mIndex, d.sub.length)" style="float:right;margin-right:25px;margin-top:15px">修改</el-button>
             <el-button @click.stop="addOperate(m)" style="float:right;margin-right:15px;margin-top:15px">+操作</el-button>
-            <el-popconfirm title="确定删除吗？" @confirm="delRes(d.id)" style="float:right;color:red;margin-top:18px">
+            <el-popconfirm title="确定删除吗？" @confirm="delRes(d.id)" style="float:right;margin-top:18px">
               <template #reference><i class="el-icon-delete"></i></template>
             </el-popconfirm>
           </template>
@@ -27,7 +27,7 @@
             <template #title>
               <span class="my_title" :id="'title_' + o.id"><i class="el-icon-setting"></i>{{o.title}}</span>
               <el-button @click.stop="editOperate(o, oIndex, m.sub.length)" style="float:right;margin-top:10px">修改</el-button>
-              <el-popconfirm title="确定删除吗？" @confirm="delRes(o.id)" style="float:right;color:red;margin-top:18px">
+              <el-popconfirm title="确定删除吗？" @confirm="delRes(o.id)" style="float:right;margin-top:18px">
                 <template #reference><i class="el-icon-delete"></i></template>
               </el-popconfirm>
             </template>
@@ -37,11 +37,12 @@
     </el-menu>
   </el-col>
 
-  <div style="display: flex">
-    <div style="width: 300px">
-      <div>选中资源 : {{selectedTitle}}</div>
-      <div>
-        <div :key="'res' + v" v-for="(v) in resUriList">
+  <div style="display: flex;" class="el-table--mini">
+    <div style="width: 300px; margin-left:15px">
+      <div>资源URI（选中:{{selectedTitle}}）</div>
+      <div style="" v-if="resUriList.length == 0" class="el-table__empty-text">暂无数据</div>
+      <div style="margin-top:18px">
+        <div :key="'res' + v" v-for="(v) in resUriList" style="margin-top:12px">
           <el-popconfirm title="确定删除吗？" @confirm="resDelUri(v)">
             <template #reference><i class="el-icon-delete"></i></template>
           </el-popconfirm>
@@ -51,13 +52,14 @@
     </div>
     <div>
       <div>
+        <span>待选URI</span>
         <el-select v-model="queryModulePath" placeholder="模块" @change="queryUriByModuleName">
           <el-option value="/test/">/test/</el-option>
           <el-option value="/security/">/security/</el-option>
         </el-select>
       </div>
       <div>
-        <div :key="'query' + v" v-for="(v) in queryUriList">
+        <div :key="'query' + v" v-for="(v) in queryUriList" style="margin-top:12px">
           <a @click="resAddUri(v)" class="el-icon-circle-plus"></a>{{v}}
         </div>
       </div>
@@ -106,10 +108,10 @@
       </el-form-item>
     </el-form>
     <template #footer>
-            <span class="dialog-footer">
-              <el-button @click="editFormV = false">取 消</el-button>
-              <el-button type="primary" @click="editRes">确 定</el-button>
-            </span>
+      <span class="dialog-footer">
+        <el-button @click="editFormV = false">取 消</el-button>
+        <el-button type="primary" @click="editRes">确 定</el-button>
+      </span>
     </template>
   </el-dialog>
 
@@ -168,7 +170,8 @@ export default {
     }
   },
   methods: {
-    handleSelected(key) {
+    handleSelected(o) {
+      let key = o.id;
       let x = document.querySelectorAll(".my_title");
       for (let i = 0; i < x.length; i++) {
         x[i].classList.remove("res-selected");
@@ -178,13 +181,22 @@ export default {
       document.getElementById("title_" + key).classList.add("res-selected");
 
       const title = document.getElementById("title_" + key).innerText;
-      this.selectedTitle = title;
 
+      if (o.t == "d") {
+        this.selectedTitle = "目录-" + title;
+      }
+      else if (o.t == "m") {
+        this.selectedTitle = "菜单-" + title;
+      }
+      else if (o.t == "o") {
+        this.selectedTitle = "操作-" + title;
+      }
+      
       this.selectedResId = key;
       this.listResUriPath(key);
     },
     itemClick(o) {
-      this.handleSelected(o.id);
+      this.handleSelected(o);
     },
     addDir() {
       this.menuPathV = false;
@@ -299,13 +311,21 @@ export default {
       })
     },
     resAddUri(uriPath) {
-      this.axios.post(`${ctrl}resAddUri`, {resId:this.selectedResId, uriPath:uriPath}).then(() => {
-        this.listResUriPath(this.selectedResId);
+      for (let i = 0; i < this.resUriList.length; i++) {
+        if (this.resUriList[i] === uriPath) {
+          this.ElMessage.warning("URI已经存在");
+          return;
+        }
+      }
+      this.axios.post(`${ctrl}resAddUri`, {resId:this.selectedResId, uriPath:uriPath}).then((res) => {
+        this.resUriList = res.data.content;
+        this.$forceUpdate();
       })
     },
     resDelUri(uriPath) {
-      this.axios.post(`${ctrl}resDelUri`, {resId:this.selectedResId, uriPath:uriPath}).then(() => {
-        this.listResUriPath(this.selectedResId);
+      this.axios.post(`${ctrl}resDelUri`, {resId:this.selectedResId, uriPath:uriPath}).then((res) => {
+        this.resUriList = res.data.content;
+        this.$forceUpdate();
       })
     },
   },
@@ -336,6 +356,10 @@ export default {
 .el-icon-circle-plus, .el-icon-delete {
   cursor: pointer;
   padding-right: 5px;
+}
+
+.el-icon-delete {
+  color:red;
 }
 
 </style>
