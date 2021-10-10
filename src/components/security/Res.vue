@@ -3,16 +3,8 @@
   <el-button @click="addDir()" style="float:right;margin-right:25px;margin-top:15px">新增目录</el-button>
   </el-row>
   <el-col :span="12">
-    <el-menu
-        ref="menu"
-        :default-active="activeIndex"
-             :uniqueOpened="true"
-             class="el-menu-vertical-demo"
-             @open="handleOpen"
-             @close="handleClose"
-             background-color="#545c64"
-             text-color="#fff"
-             active-text-color="#ffd04b">
+    <el-menu ref="menu" :default-active="activeIndex"
+             :uniqueOpened="true" background-color="#545c64"  text-color="#fff" active-text-color="#ffd04b">
       <el-submenu :key="d.id" :index="d.id + ''" v-for="(d, dIndex) in menu">
         <template #title>
           <span @click.stop="itemClick(d)" class="my_title" :id="'title_' + d.id"><i class="el-icon-folder"></i>{{d.title}}</span>
@@ -22,13 +14,23 @@
             <template #reference><i class="el-icon-delete"></i></template>
           </el-popconfirm>
         </template>
-        <el-submenu :key="m.id" :index="m.id + ''" v-for="(m) in d.sub" class="menu-title">
+        <el-submenu :key="m.id" :index="m.id + ''" v-for="(m, mIndex) in d.sub" class="menu-title">
           <template #title>
             <span @click.stop="itemClick(m)" class="my_title" :id="'title_' + m.id" ><i class="el-icon-menu"></i>{{m.title}}</span>
-            <el-button @click.stop="addOperate(m)" style="float:right;margin-right:25px;margin-top:15px">+操作</el-button>
+            <el-button @click.stop="editMenu(m, mIndex, d.sub.length)" style="float:right;margin-right:25px;margin-top:15px">修改</el-button>
+            <el-button @click.stop="addOperate(m)" style="float:right;margin-right:15px;margin-top:15px">+操作</el-button>
+            <el-popconfirm title="确定删除吗？" @confirm="delRes(d.id)" style="float:right;color:red;margin-top:18px">
+              <template #reference><i class="el-icon-delete"></i></template>
+            </el-popconfirm>
           </template>
-          <el-menu-item @click="itemClick(o)" :key="o.id" :index="o.id + ''" v-for="(o) in m.sub">
-            <span class="my_title" :id="'title_' + o.id"><i class="el-icon-setting"></i>{{o.title}}</span>
+          <el-menu-item @click="itemClick(o)" :key="o.id" :index="o.id + ''" v-for="(o, oIndex) in m.sub">
+            <template #title>
+              <span class="my_title" :id="'title_' + o.id"><i class="el-icon-setting"></i>{{o.title}}</span>
+              <el-button @click.stop="editOperate(o, oIndex, m.sub.length)" style="float:right;margin-top:10px">修改</el-button>
+              <el-popconfirm title="确定删除吗？" @confirm="delRes(o.id)" style="float:right;color:red;margin-top:18px">
+                <template #reference><i class="el-icon-delete"></i></template>
+              </el-popconfirm>
+            </template>
           </el-menu-item>
         </el-submenu>
       </el-submenu>
@@ -139,7 +141,7 @@ export default {
   },
   data() {
     return {
-      activeIndex: '1',
+      activeIndex: '',
       menu:[],
       form: {
         resId: '',
@@ -181,15 +183,8 @@ export default {
       this.selectedResId = key;
       this.listResUriPath(key);
     },
-    handleOpen() {
-    },
-    handleClose() {
-    },
     itemClick(o) {
       this.handleSelected(o.id);
-    },
-    test() {
-      alert(222);
     },
     addDir() {
       this.menuPathV = false;
@@ -207,13 +202,13 @@ export default {
       this.menuPathV = false;
       this.addFormV = true;
       this.addForm.resType = "o";
-      alert(m.id)
       this.addForm.resParentId = m.id;
     },
     insert() {
       this.$refs['addForm'].validate((valid) => {
         if (!valid) return;
         this.axios.post(`${ctrl}insert`, this.addForm).then(() => {
+          this.activeIndex = -1;
           this.loadAllRes();
           if (this.addForm.resParentId) {
             this.$nextTick(() => {
@@ -238,6 +233,36 @@ export default {
       this.editForm.resType = d.t;
       this.editForm.resId = d.id;
       this.editForm.resName = d.title;
+    },
+    editMenu(m, mIndex, mSize) {
+      this.tmpResSort = [];
+      for (let i = 1; i <= mSize; i++) {
+        this.tmpResSort.push(i);
+      }
+      this.editForm.resSort = mIndex + 1;
+      this.editForm.resSortOld = mIndex + 1;
+      this.editForm.resParentId = m.pid;
+
+      this.editMenuPathV = true;
+      this.editFormV = true;
+      this.editForm.resType = m.t;
+      this.editForm.resId = m.id;
+      this.editForm.resName = m.title;
+    },
+    editOperate(o, oIndex, oSize) {
+      this.tmpResSort = [];
+      for (let i = 1; i <= oSize; i++) {
+        this.tmpResSort.push(i);
+      }
+      this.editForm.resSort = oIndex + 1;
+      this.editForm.resSortOld = oIndex + 1;
+      this.editForm.resParentId = o.pid;
+
+      this.editMenuPathV = false;
+      this.editFormV = true;
+      this.editForm.resType = o.t;
+      this.editForm.resId = o.id;
+      this.editForm.resName = o.title;
     },
     editRes() {
       this.$refs['editForm'].validate((valid) => {
