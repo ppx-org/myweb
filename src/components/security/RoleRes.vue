@@ -68,8 +68,15 @@ export default {
       // listResIdByRole
       let params = {roleId:item.roleId};
       this.axios.get(`${ctrl}listResIdByRole`, {params}).then((res) => {
-        this.$refs.resTree.setCheckedNodes([])
-        this.checkedKeys = res.data.content;
+        this.$refs.resTree.setCheckedNodes([]);
+
+
+        // this.$refs.resTree.setCheckedNodes(res.data.content)
+        const checkedResId = res.data.content;
+        for (let i = 0; i < checkedResId.length; i++) {
+          this.$refs.resTree.setChecked(checkedResId[i], true, false);
+        }
+        // this.checkedKeys = res.data.content;
       });
 
       this.selectedRoleId = item.roleId;
@@ -92,6 +99,8 @@ export default {
       for (let i = 0; i < nodes.length; i++) {
         resId.push(nodes[i].id);
       }
+      console.log("00000000")
+      console.log(resId)
 
       const param = {roleId:this.selectedRoleId, resId:resId}
       this.axios.post(`${ctrl}saveRoleRes`, param).then(() => {
