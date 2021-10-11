@@ -1,4 +1,4 @@
-# myweb 0.6.0 
+# myweb 0.6.1 
 
 
 # Vue 3 + Vite
