@@ -31,7 +31,7 @@
   <el-col :span="5" style="margin-left:10px; width: 300px">
     <el-form :inline="true" class="my-query-form">
       <el-form-item>
-        <el-label-wrap>用户（{{selectedUsername}}）的角色</el-label-wrap>
+        用户（{{selectedUsername}}）的角色
       </el-form-item>
     </el-form>
 
@@ -51,9 +51,7 @@
 
   <el-col :span="5" style="margin-left:10px; width: 300px">
     <el-form :inline="true" class="my-query-form">
-      <el-form-item>
-        <el-label-wrap>待选角色</el-label-wrap>
-      </el-form-item>
+      <el-form-item>待选角色</el-form-item>
       <el-form-item>
         <el-button type="primary" @click="queryRole">查询</el-button>
       </el-form-item>
@@ -69,21 +67,6 @@
     </el-table>
   </el-col>
 
-  <!--
-  <el-col :span="4" style="margin-left:10px;">
-    <div>
-      <div>
-        <span>待选角色</span>
-        <el-button type="primary" @click="queryRole">查询</el-button>
-      </div>
-      <div>
-        <div :key="'query' + v" v-for="(v) in queryRoleList" style="margin-top:12px">
-          <a @click="userAddRole(v)" class="el-icon-circle-plus"></a>{{v.roleName}}
-        </div>
-      </div>
-    </div>
-  </el-col>
-  -->
 
   <el-dialog title="新增" v-model="addFormV" :close-on-click-modal="false" width="500px">
     <el-form ref="addForm" :model="addForm" :rules="rules" label-width="80px">

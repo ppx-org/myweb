@@ -1,8 +1,9 @@
 <template>
-  <el-row style="margin-top:-15px;margin-bottom: 3px">
-    <el-button @click="addDir()" style="float:right;margin-right:25px;margin-top:15px">新增目录</el-button>
-  </el-row>
-  <el-col :span="12">
+
+  <el-col style="width:480px;">
+    <el-row style="margin-top:-10px;margin-bottom: 6px">
+      <el-button @click="addDir()" style="float:right;margin-right:25px;margin-top:15px">新增目录</el-button>
+    </el-row>
     <el-menu ref="menu" :default-active="activeIndex"
              :uniqueOpened="true" background-color="#545c64"  text-color="#fff" active-text-color="#ffd04b">
       <el-submenu :key="d.id" :index="d.id + ''" v-for="(d, dIndex) in menu">
@@ -37,34 +38,42 @@
     </el-menu>
   </el-col>
 
-  <div style="display: flex;" class="el-table--mini">
-    <div style="width: 300px; margin-left:15px">
-      <div>资源URI（选中:{{selectedTitle}}）</div>
-      <div style="" v-if="resUriList.length == 0" class="el-table__empty-text">暂无数据</div>
-      <div style="margin-top:18px">
-        <div :key="'res' + v" v-for="(v) in resUriList" style="margin-top:12px">
-          <el-popconfirm title="确定删除吗？" @confirm="resDelUri(v)">
-            <template #reference><i class="el-icon-delete"></i></template>
+  <el-col style="margin-left:10px; width: 300px">
+    <el-form :inline="true" class="my-query-form">
+      <el-form-item>{{selectedTitle}}的URI</el-form-item>
+    </el-form>
+    <el-table :data="resUriList" border>
+      <el-table-column prop="uriPath" label="URI" width=""></el-table-column>
+      <el-table-column label="操作" width="100">
+        <template v-slot="col">
+          <el-popconfirm title="确定删除吗？" @confirm="resDelUri(col.row)">
+            <template #reference>
+              <el-button size="mini" type="danger">删除</el-button>
+            </template>
           </el-popconfirm>
-          {{v}}
-        </div>
-      </div>
-    </div>
-    <div>
-      <div>
-        <span>待选URI</span>
-        <el-select v-model="queryModulePath" placeholder="模块" @change="queryUriByModuleName">
-          <el-option value="/test/">/test/</el-option>
-          <el-option value="/security/">/security/</el-option>
-        </el-select>
-      </div>
-      <div>
-        <div :key="'query' + v" v-for="(v) in queryUriList" style="margin-top:12px">
-          <a @click="resAddUri(v)" class="el-icon-circle-plus"></a>{{v}}
-        </div>
-      </div>
-    </div>
-  </div>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-col>
+
+  <el-col style="margin-left:10px; width: 300px">
+    <el-form :inline="true" class="my-query-form">
+      <el-form-item>待选角色d</el-form-item>
+      <el-select v-model="queryModulePath" placeholder="模块" @change="queryUriByModuleName">
+        <el-option value="/test/">/test/</el-option>
+        <el-option value="/security/">/security/</el-option>
+      </el-select>
+    </el-form>
+
+    <el-table :data="queryUriList" border>
+      <el-table-column prop="uriPath" label="URI_PATH"></el-table-column>
+      <el-table-column label="操作" width="110">
+        <template v-slot="col">
+          <el-button size="mini" @click="resAddUri(col.row.uriPath)">添加URI</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-col>
 
   <el-dialog title="新增" v-model="addFormV" :close-on-click-modal="false" width="450px">
     <el-form ref="addForm" :model="addForm" :rules="rules" label-width="80px">
@@ -123,21 +132,21 @@ import { ref, reactive } from 'vue'
 export default {
   name: 'Menu',
   setup() {
-    let selectedResId = -1;
-    let selectedTitle = "无";
+    let selectedResId = ref(-1);
+    let selectedTitle = ref("无");
     const addFormV = ref(false);
     const editFormV = ref(false);
     const menuPathV = ref(false);
     const editMenuPathV = ref(false);
     const queryModulePath = ref("");
-    const resUriList = reactive([]);
-    const queryUriList = reactive([]);
+    // const resUriList = reactive([]);
+    // const queryUriList = reactive([]);
 
     const tmpResSort = reactive([]);
     return {
       selectedResId, selectedTitle,
       addFormV, menuPathV, editFormV, editMenuPathV,
-      queryModulePath, resUriList, queryUriList,
+      queryModulePath,
       tmpResSort,
     }
   },
@@ -166,7 +175,9 @@ export default {
       },
       dict: {
         resType: {'d': '目录', 'm': '菜单', 'o': '操作'}
-      }
+      },
+      queryUriList: [],
+      resUriList: [],
     }
   },
   methods: {
@@ -193,7 +204,7 @@ export default {
       }
       
       this.selectedResId = key;
-      this.listResUriPath(key);
+      this.listResUri(key);
     },
     itemClick(o) {
       this.handleSelected(o);
@@ -300,19 +311,18 @@ export default {
       const params = {modulePath:this.queryModulePath};
       this.axios.get(`${ctrl}listSystemUri`, {params}).then((res) => {
         this.queryUriList = res.data.content;
-        this.$forceUpdate();
       })
     },
-    listResUriPath(resId) {
-      const params = {resId:resId};
-      this.axios.get(`${ctrl}listResUriPath`, {params}).then((res) => {
+    listResUri(resId) {
+      const params = {resId: resId};
+      this.axios.get(`${ctrl}listResUri`, {params}).then((res) => {
         this.resUriList = res.data.content;
         this.$forceUpdate();
       })
     },
     resAddUri(uriPath) {
       for (let i = 0; i < this.resUriList.length; i++) {
-        if (this.resUriList[i] === uriPath) {
+        if (this.resUriList[i].uriPath === uriPath) {
           this.$message.warning("URI已经存在");
           return;
         }
@@ -322,8 +332,8 @@ export default {
         this.$forceUpdate();
       })
     },
-    resDelUri(uriPath) {
-      this.axios.post(`${ctrl}resDelUri`, {resId:this.selectedResId, uriPath:uriPath}).then((res) => {
+    resDelUri(row) {
+      this.axios.post(`${ctrl}resDelUri`, {resId:this.selectedResId, uriPath:row.uriPath}).then((res) => {
         this.resUriList = res.data.content;
         this.$forceUpdate();
       })
