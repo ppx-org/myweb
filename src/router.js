@@ -56,6 +56,6 @@ router.addRoute('Home', {path:'/test/Example', component:() => import('./compone
 router.addRoute('Home', {path:'/security/Res', component:() => import('./components/security/Res.vue')})
 
 router.addRoute('Home', {path:'/security/RoleRes', component:() => import('./components/security/RoleRes.vue')})
-
+router.addRoute('Home', {path:'/security/User', component:() => import('./components/security/User.vue')})
 
 export default router
