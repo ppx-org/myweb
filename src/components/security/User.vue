@@ -1,8 +1,11 @@
 <template>
   <el-col :span="8">
     <el-form :inline="true" :model="form" class="my-query-form">
-      <el-form-item label="用户名称">
-        <el-input v-model="form.username" placeholder="用户名称"></el-input>
+      <el-form-item>
+        <el-button @click="addFormV=true">新增</el-button>
+      </el-form-item>
+      <el-form-item label="用户名">
+        <el-input v-model="form.username" placeholder="用户名"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="queryPage">查询</el-button>
@@ -10,7 +13,7 @@
     </el-form>
 
     <el-table :data="tableData" border style="width: 600px">
-      <el-table-column prop="roleName" label="用户名称" @click="test()">
+      <el-table-column prop="roleName" label="用户名" @click="test()">
         <template v-slot="col">
           <el-link type="primary" @click="selectUser(col.row)" href="#">{{ col.row.username }}</el-link>
         </template>
@@ -48,6 +51,38 @@
     </div>
   </el-col>
 
+  <el-dialog title="新增" v-model="addFormV" :close-on-click-modal="false" width="500px">
+    <el-form ref="addForm" :model="addForm" :rules="rules" label-width="80px">
+      <el-form-item label="用户名" prop="username">
+        <el-input v-model="addForm.username" style="width: 300px;"></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="username">
+        <el-input type="password" v-model="addForm.password" style="width: 300px;"></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="addFormV = false">取 消</el-button>
+        <el-button type="primary" @click="insert">确 定</el-button>
+      </span>
+    </template>
+  </el-dialog>
+
+  <el-dialog title="编辑" v-model="editFormV" :close-on-click-modal="false" width="500px">
+    <el-form ref="editForm" :model="editForm" label-width="80px">
+      <el-form-item label="用户名"><el-input v-model="editForm.username"></el-input></el-form-item>
+    </el-form>
+    <el-form-item label="密码" prop="username">
+      <el-input type="password" v-model="addForm.password" style="width: 300px;"></el-input>
+    </el-form-item>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="editFormV = false">取 消</el-button>
+        <el-button type="primary" @click="update">确 定</el-button>
+      </span>
+    </template>
+  </el-dialog>
+
 </template>
 
 <script>
@@ -59,11 +94,25 @@ export default {
       form: {
         userId: '',
         username: '',
+        password: '',
       },
       selectedUserId: '',
       selectedUsername: '无',
       userRoleList: [],
-      queryRoleList: []
+      queryRoleList: [],
+
+      addForm: {...this.form},
+      editForm: {...this.form},
+      rules: {
+        username: [
+          {required: true, message: '必填'}
+        ],
+        password: [
+          {required: true, message: '必填'}
+        ],
+      },
+      addFormV: false,
+      editFormV: false,
     }
   },
   methods: {
@@ -72,6 +121,25 @@ export default {
       this.axios.get(`${ctrl}page`, {params}).then((res) => {
         this.$refs.Page.setPage(res.data);
         this.tableData = res.data.content;
+      })
+    },
+    insert() {
+      this.$refs['addForm'].validate((valid) => {
+        if (!valid) return;
+        this.axios.post(`${ctrl}insert`, this.addForm).then(() => {
+          this.addFormV = false;
+          this.queryPage();
+        })
+      })
+    },
+    edit(id) {
+      this.editForm = {userId:id, username:'xxxx'};
+      this.editFormV = true;
+    },
+    update() {
+      this.axios.post(`${ctrl}update`, this.editForm).then(() => {
+        this.editFormV = false;
+        this.queryPage();
       })
     },
     selectUser(item) {
@@ -90,7 +158,7 @@ export default {
     },
     userDelRole(v) {
       this.axios.post(`${ctrl}userDelRole`, {resId:this.selectedUserId, roleId:v}).then((res) => {
-        this.userRuleList = res.data.content;
+        this.userRoleList = res.data.content;
         this.$forceUpdate();
       })
     },
@@ -99,8 +167,9 @@ export default {
         return this.$message.warning("请先选择用户")
       }
       const param = {userId:this.selectedUserId, roleId:item.roleId}
-      this.axios.post(`${ctrl}saveUserRole`, param).then(() => {
-        this.$message.success("保存成功");
+      this.axios.post(`${ctrl}saveUserRole`, param).then((res) => {
+        this.userRoleList = res.data.content;
+        this.$forceUpdate();
       })
     }
   },
