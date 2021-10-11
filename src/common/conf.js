@@ -58,12 +58,13 @@ let initConf = function(app) {
                 let token = response.headers.authorization;
                 localStorage.setItem("my_token", token);
             }
-            console.log(">>>>>>>>>>>>response.data")
-            console.log(response.data)
-
-
             if (g.loadingAuto && g.hideLoading) {
                 g.hideLoading()
+            }
+            const BUSINESS_EXCEPTION = 4000;
+            if (response.data.code === BUSINESS_EXCEPTION) {
+                ElMessage.warning(response.data.msg);
+                return Promise.reject(response);
             }
             return response;
         },

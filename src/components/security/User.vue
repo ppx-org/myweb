@@ -1,5 +1,5 @@
 <template>
-  <el-col :span="8">
+  <el-col :span="10" style="width:600px">
     <el-form :inline="true" :model="form" class="my-query-form">
       <el-form-item>
         <el-button @click="addFormV=true">新增</el-button>
@@ -12,13 +12,14 @@
       </el-form-item>
     </el-form>
 
-    <el-table :data="tableData" border>
-      <el-table-column prop="username" label="用户名" width="250">
+    <el-table :data="tableData" border >
+      <el-table-column prop="userId" label="用户ID" width="100"></el-table-column>
+      <el-table-column prop="username" label="用户名" width="">
         <template v-slot="col">
           <el-link type="primary" @click="selectUser(col.row)" href="#">{{ col.row.username }}</el-link>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="150">
+      <el-table-column label="操作" width="200">
         <template v-slot="col">
           <el-button size="mini" @click="edit(col.row)">编辑</el-button>
         </template>
@@ -27,21 +28,48 @@
     <my-page ref="Page" :query="queryPage"></my-page>
   </el-col>
 
-  <el-col :span="4" style="margin-left:10px; display: flex;width: 300px" class="el-table--mini">
-      <div >
-        <span>用户角色（选中:{{selectedUsername}}）</span>
-        <div style="" v-if="userRoleList.length == 0" class="el-table__empty-text">暂无数据</div>
-        <div style="margin-top:18px">
-          <div :key="'user' + v" v-for="(v) in userRoleList" style="margin-top:12px">
-            <el-popconfirm title="确定删除吗？" @confirm="userDelRole(v)">
-              <template #reference><i class="el-icon-delete"></i></template>
-            </el-popconfirm>
-            {{v.roleName}}
-          </div>
-        </div>
-      </div>
+  <el-col :span="5" style="margin-left:10px; width: 300px">
+    <el-form :inline="true" class="my-query-form">
+      <el-form-item>
+        <el-label-wrap>用户（{{selectedUsername}}）的角色</el-label-wrap>
+      </el-form-item>
+    </el-form>
+
+    <el-table :data="userRoleList" border >
+      <el-table-column prop="roleName" label="角色名称" width=""></el-table-column>
+      <el-table-column label="操作" width="100">
+        <template v-slot="col">
+          <el-popconfirm title="确定删除吗？" @confirm="userDelRole(col.row)">
+            <template #reference>
+              <el-button size="mini" type="danger">删除</el-button>
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
+    </el-table>
   </el-col>
 
+  <el-col :span="5" style="margin-left:10px; width: 300px">
+    <el-form :inline="true" class="my-query-form">
+      <el-form-item>
+        <el-label-wrap>待选角色</el-label-wrap>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="queryRole">查询</el-button>
+      </el-form-item>
+    </el-form>
+
+    <el-table :data="queryRoleList" border>
+      <el-table-column prop="roleName" label="角色名称"></el-table-column>
+      <el-table-column label="操作" width="110">
+        <template v-slot="col">
+          <el-button size="mini" @click="userAddRole(col.row)">添加角色</el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-col>
+
+  <!--
   <el-col :span="4" style="margin-left:10px;">
     <div>
       <div>
@@ -55,6 +83,7 @@
       </div>
     </div>
   </el-col>
+  -->
 
   <el-dialog title="新增" v-model="addFormV" :close-on-click-modal="false" width="500px">
     <el-form ref="addForm" :model="addForm" :rules="rules" label-width="80px">
@@ -76,7 +105,7 @@
   <el-dialog title="编辑" v-model="editFormV" :close-on-click-modal="false" width="500px">
     <el-form ref="editForm" :model="editForm" label-width="80px">
       <el-form-item label="用户名" prop="username">
-          <el-input v-model="editForm.username"></el-input>
+          <el-input v-model="editForm.username" style="width: 300px;"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input type="password" v-model="editForm.password" style="width: 300px;"></el-input>
@@ -141,7 +170,7 @@ export default {
       })
     },
     edit(row) {
-      this.editForm = {userId: row.id, username: row.username};
+      this.editForm = {userId: row.userId, username: row.username, password: row.password};
       this.passwordOld = row.password;
       this.editFormV = true;
     },
@@ -151,8 +180,8 @@ export default {
         editForm.password = null;
       }
       this.axios.post(`${ctrl}update`, editForm).then(() => {
-        this.editFormV = false;
-        this.queryPage();
+          this.editFormV = false;
+          this.queryPage();
       })
     },
     selectUser(item) {
@@ -167,10 +196,11 @@ export default {
     queryRole() {
       this.axios.get(`${ctrl}listRole`, {}).then((res) => {
         this.queryRoleList = res.data.content;
+        this.$forceUpdate();
       });
     },
-    userDelRole(v) {
-      this.axios.post(`${ctrl}userDelRole`, {resId:this.selectedUserId, roleId:v}).then((res) => {
+    userDelRole(row) {
+      this.axios.post(`${ctrl}userDelRole`, {userId:this.selectedUserId, roleId:row.roleId}).then((res) => {
         this.userRoleList = res.data.content;
         this.$forceUpdate();
       })
@@ -178,6 +208,11 @@ export default {
     userAddRole(item) {
       if (!this.selectedUserId) {
         return this.$message.warning("请先选择用户")
+      }
+      for (let i = 0; i < this.userRoleList.length; i++) {
+        if (this.userRoleList[i].roleId === item.roleId) {
+          return this.$message.warning("角色已经存在");
+        }
       }
       const param = {userId:this.selectedUserId, roleId:item.roleId}
       this.axios.post(`${ctrl}saveUserRole`, param).then((res) => {
