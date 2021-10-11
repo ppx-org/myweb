@@ -12,10 +12,15 @@
       </el-form-item>
     </el-form>
 
-    <el-table :data="tableData" border style="width: 600px">
-      <el-table-column prop="roleName" label="用户名" @click="test()">
+    <el-table :data="tableData" border>
+      <el-table-column prop="username" label="用户名" width="250">
         <template v-slot="col">
           <el-link type="primary" @click="selectUser(col.row)" href="#">{{ col.row.username }}</el-link>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="150">
+        <template v-slot="col">
+          <el-button size="mini" @click="edit(col.row)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -70,11 +75,13 @@
 
   <el-dialog title="编辑" v-model="editFormV" :close-on-click-modal="false" width="500px">
     <el-form ref="editForm" :model="editForm" label-width="80px">
-      <el-form-item label="用户名"><el-input v-model="editForm.username"></el-input></el-form-item>
+      <el-form-item label="用户名" prop="username">
+          <el-input v-model="editForm.username"></el-input>
+      </el-form-item>
+      <el-form-item label="密码" prop="password">
+        <el-input type="password" v-model="editForm.password" style="width: 300px;"></el-input>
+      </el-form-item>
     </el-form>
-    <el-form-item label="密码" prop="username">
-      <el-input type="password" v-model="addForm.password" style="width: 300px;"></el-input>
-    </el-form-item>
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="editFormV = false">取 消</el-button>
@@ -113,6 +120,7 @@ export default {
       },
       addFormV: false,
       editFormV: false,
+      passwordOld: '',
     }
   },
   methods: {
@@ -132,12 +140,17 @@ export default {
         })
       })
     },
-    edit(id) {
-      this.editForm = {userId:id, username:'xxxx'};
+    edit(row) {
+      this.editForm = {userId: row.id, username: row.username};
+      this.passwordOld = row.password;
       this.editFormV = true;
     },
     update() {
-      this.axios.post(`${ctrl}update`, this.editForm).then(() => {
+      const editForm = {...this.editForm};
+      if (this.editForm.password === this.passwordOld) {
+        editForm.password = null;
+      }
+      this.axios.post(`${ctrl}update`, editForm).then(() => {
         this.editFormV = false;
         this.queryPage();
       })
