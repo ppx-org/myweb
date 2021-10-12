@@ -18,6 +18,7 @@
 </template>
 
 <script>
+
 export default {
   name: 'Menu',
   data() {
@@ -34,9 +35,9 @@ export default {
       console.log(key, keyPath);
     }
   },
-  created: function() {
+  mounted: function() {
     let api = "/security/menu/list";
-    this.axios.get(api, {}).then((res) => {
+    this.myInstance.get(api, {}).then((res) => {
       this.menu = res.data.content;
     })
   }

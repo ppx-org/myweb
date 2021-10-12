@@ -5,12 +5,35 @@ import {utils} from "./utils";
 import {ElMessage} from "element-plus";
 
 let initConf = function(app) {
-
     let g = app.config.globalProperties;
-
 
     // axios >>>>>>>>>>
     app.use(VueAxios, axios);
+
+    let myInstance = axios.create({});
+    myInstance.defaults.baseURL = "/api"
+    myInstance.interceptors.request.use(
+        config => {
+            let token = localStorage.getItem("my_token");
+            if (token) {
+                config.headers.Authorization = "Bearer " + token;
+            }
+
+            if (config.method === 'post') {
+                config.data = utils.stringify(config.data);
+            }
+
+            return config;
+        },
+        err => {
+            console.log(err);
+            return Promise.reject(err);
+        }
+    );
+    app.config.globalProperties.myInstance = myInstance;
+
+
+
 
     g.loadingAuto = true;
     g.loadingStatus = false;
@@ -31,6 +54,10 @@ let initConf = function(app) {
 
     axios.interceptors.request.use(
         config => {
+            if (Object.hasOwn(config.headers, "hideLoading")) {
+                delete config.headers.hideLoading;
+            }
+
             let token = localStorage.getItem("my_token");
             if (token) {
                 config.headers.Authorization = "Bearer " + token;
@@ -54,11 +81,16 @@ let initConf = function(app) {
 
     axios.interceptors.response.use(
         response => {
+            let requestHideLoading = true;
+            if (response.config.headers.hideLoading === false) {
+                requestHideLoading = false;
+            }
+
             if (response.headers.authorization) {
                 let token = response.headers.authorization;
                 localStorage.setItem("my_token", token);
             }
-            if (g.loadingAuto && g.hideLoading) {
+            if (g.loadingAuto && g.hideLoading && requestHideLoading) {
                 g.hideLoading()
             }
             const BUSINESS_EXCEPTION = 4000;

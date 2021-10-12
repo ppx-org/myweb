@@ -24,6 +24,7 @@ export default {
   },
   methods: {
     showLoading() {
+      // alert("true")
       this.loadingStatus = true;
       setTimeout(function (thisObj) {
         if (thisObj.loadingStatus) {
