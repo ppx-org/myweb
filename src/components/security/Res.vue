@@ -1,6 +1,6 @@
 <template>
 
-  <el-col style="width:480px;">
+  <el-col style="width:460px;">
     <el-row style="margin-top:-10px;margin-bottom: 6px">
       <el-button @click="addDir()" style="float:right;margin-right:25px;margin-top:15px">新增目录</el-button>
     </el-row>
@@ -58,16 +58,20 @@
 
   <el-col style="margin-left:10px; width: 300px">
     <el-form :inline="true" class="my-query-form">
-      <el-form-item>待选角色d</el-form-item>
-      <el-select v-model="queryModulePath" placeholder="模块" @change="queryUriByModuleName">
+      <el-form-item>待选</el-form-item>
+      <el-select v-model="queryModulePath" placeholder="模块" style="width:100px">
         <el-option value="/test/">/test/</el-option>
         <el-option value="/security/">/security/</el-option>
       </el-select>
+      <el-form-item><el-input v-model="queryActionName" placeholder="action" style="width:90px"/></el-form-item>
+      <el-button type="primary" @click="queryUriByModuleName">
+        <i class="el-icon-search"></i>
+      </el-button>
     </el-form>
 
-    <el-table :data="queryUriList" border>
+    <el-table :data="queryUriList" border style="width:300px">
       <el-table-column prop="uriPath" label="URI_PATH"></el-table-column>
-      <el-table-column label="操作" width="110">
+      <el-table-column label="操作" width="100">
         <template v-slot="col">
           <el-button size="mini" @click="resAddUri(col.row.uriPath)">添加URI</el-button>
         </template>
@@ -132,15 +136,13 @@ import { ref, reactive } from 'vue'
 export default {
   name: 'Menu',
   setup() {
-    let selectedResId = ref(-1);
+    let selectedResId = ref('');
     let selectedTitle = ref("无");
     const addFormV = ref(false);
     const editFormV = ref(false);
     const menuPathV = ref(false);
     const editMenuPathV = ref(false);
     const queryModulePath = ref("");
-    // const resUriList = reactive([]);
-    // const queryUriList = reactive([]);
 
     const tmpResSort = reactive([]);
     return {
@@ -178,6 +180,7 @@ export default {
       },
       queryUriList: [],
       resUriList: [],
+      queryActionName: '',
     }
   },
   methods: {
@@ -308,7 +311,11 @@ export default {
       })
     },
     queryUriByModuleName() {
-      const params = {modulePath:this.queryModulePath};
+      if (this.queryModulePath == "" || this.queryActionName == "") {
+        return this.$message.warning("查询条件能不为空");
+      }
+      let path = this.queryModulePath + this.queryActionName + "/"
+      const params = {modulePath:path};
       this.axios.get(`${ctrl}listSystemUri`, {params}).then((res) => {
         this.queryUriList = res.data.content;
       })
@@ -321,10 +328,12 @@ export default {
       })
     },
     resAddUri(uriPath) {
+      if (!this.selectedResId) {
+        return this.$message.warning("请先选择资源");
+      }
       for (let i = 0; i < this.resUriList.length; i++) {
         if (this.resUriList[i].uriPath === uriPath) {
-          this.$message.warning("URI已经存在");
-          return;
+          return this.$message.warning("URI已经存在");
         }
       }
       this.axios.post(`${ctrl}resAddUri`, {resId:this.selectedResId, uriPath:uriPath}).then((res) => {
