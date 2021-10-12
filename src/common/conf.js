@@ -63,7 +63,7 @@ let initConf = function(app) {
             }
             const BUSINESS_EXCEPTION = 4000;
             if (response.data.code === BUSINESS_EXCEPTION) {
-                ElMessage.warning(response.data.msg);
+                ElMessage.warning(response.data.content);
                 return Promise.reject(response);
             }
             return response;
