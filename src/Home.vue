@@ -34,13 +34,13 @@ export default {
     }
   },
   created() {
-    this.setShowLoading(this.showLoading);
-    this.setHideLoading(this.hideLoading);
-    this.setLoadingAuto(true);
+    this._setShowLoading(this.showLoading);
+    this._setHideLoading(this.hideLoading);
+    this._setLoadingAuto(true);
   },
   watch: {
     '$route'() {
-      this.setLoadingAuto(true);
+      this._setLoadingAuto(true);
     }
   }
 }
