@@ -21,12 +21,6 @@ function getResponse(response) {
         let token = response.headers.authorization;
         localStorage.setItem("my_token", token);
     }
-
-    const BUSINESS_EXCEPTION = 4000;
-    if (response.data.code === BUSINESS_EXCEPTION) {
-        ElMessage.warning(response.data.content);
-        return Promise.reject(response);
-    }
     return response;
 }
 function getResponseError(error) {
@@ -97,7 +91,14 @@ let initConf = function(app) {
         response => {
             let requestHideLoading = response.config.headers.hideLoading === false ? false : true;
             if (g.loadingAuto && g.hideLoading && requestHideLoading) {
-                g.hideLoading()
+                g.hideLoading();
+            }
+
+            const BUSINESS_EXCEPTION = 4000;
+            if (response.data.code === BUSINESS_EXCEPTION) {
+                ElMessage.warning(response.data.content);
+                g.hideLoading();
+                return Promise.reject(response);
             }
             return getResponse(response);
         },

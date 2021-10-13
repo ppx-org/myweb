@@ -4,8 +4,8 @@
       <el-form-item>
         <el-button @click="addFormV=true">新增</el-button>
       </el-form-item>
-      <el-form-item label="用户名">
-        <el-input v-model="form.username" placeholder="用户名"></el-input>
+      <el-form-item label="用户名称">
+        <el-input v-model="form.username" placeholder="用户名称"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="queryPage">查询</el-button>
@@ -14,7 +14,7 @@
 
     <el-table :data="tableData" border >
       <el-table-column prop="userId" label="用户ID" width="100"></el-table-column>
-      <el-table-column prop="username" label="用户名" width="">
+      <el-table-column prop="username" label="用户名称" width="">
         <template v-slot="col">
           <el-link type="primary" @click="selectUser(col.row)" href="#">{{ col.row.username }}</el-link>
         </template>
@@ -68,13 +68,13 @@
   </el-col>
 
 
-  <el-dialog title="新增" v-model="addFormV" :close-on-click-modal="false" width="500px">
+  <el-dialog title="新增" v-model="addFormV" :close-on-click-modal="false" width="480px">
     <el-form ref="addForm" :model="addForm" :rules="rules" label-width="80px">
-      <el-form-item label="用户名" prop="username">
-        <el-input v-model="addForm.username" style="width: 300px;"></el-input>
+      <el-form-item label="用户名称" prop="username">
+        <el-input v-model="addForm.username" class="my-input" maxlength="16"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="username">
-        <el-input type="password" v-model="addForm.password" style="width: 300px;"></el-input>
+      <el-form-item label="用户密码" prop="username">
+        <el-input type="password" v-model="addForm.password" class="my-input" maxlength="16"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -87,11 +87,11 @@
 
   <el-dialog title="编辑" v-model="editFormV" :close-on-click-modal="false" width="500px">
     <el-form ref="editForm" :model="editForm" label-width="80px">
-      <el-form-item label="用户名" prop="username">
-          <el-input v-model="editForm.username" style="width: 300px;"></el-input>
+      <el-form-item label="用户名称" prop="username">
+          <el-input v-model="editForm.username" class="my-input" maxlength="16"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password">
-        <el-input type="password" v-model="editForm.password" style="width: 300px;"></el-input>
+      <el-form-item label="用户密码" prop="password">
+        <el-input type="password" v-model="editForm.password" class="my-input" maxlength="16"></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -209,3 +209,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.my-input {
+  width: 300px;
+}
+</style>

@@ -42,21 +42,21 @@
   </el-table>
   <my-page ref="Page" :query="queryPage"></my-page>
 
-  <el-dialog title="新增" v-model="addFormV" :close-on-click-modal="false" width="500px">
-    <el-form ref="addForm" :model="addForm" :rules="rules" label-width="80px" class="my-dialog-form">
+  <el-dialog title="新增" v-model="addFormV" :close-on-click-modal="false" width="480px">
+    <el-form ref="addForm" :model="addForm" :rules="rules" label-width="80px">
       <el-form-item label="客户" prop="exampleName">
-        <el-input v-model="addForm.exampleName"></el-input>
+        <el-input v-model="addForm.exampleName" maxlength="16" class="my-input"></el-input>
       </el-form-item>
       <el-form-item label="类型">
-        <el-select v-model="addForm.exampleType">
+        <el-select v-model="addForm.exampleType" class="my-input">
           <el-option v-for="(l,v) in dict.exampleType" :label="l" :value="v" :key="v"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="日期">
-        <el-date-picker v-model="addForm.exampleDate" type="date"></el-date-picker>
+        <el-date-picker v-model="addForm.exampleDate" type="date" style="width:300px"></el-date-picker>
       </el-form-item>
       <el-form-item label="时间">
-        <el-date-picker v-model="addForm.exampleTime" type="datetime"></el-date-picker>
+        <el-date-picker v-model="addForm.exampleTime" type="datetime"  style="width:300px"></el-date-picker>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -67,13 +67,13 @@
     </template>
   </el-dialog>
 
-  <el-dialog title="编辑" v-model="editFormV" :close-on-click-modal="false" width="500px">
-    <el-form ref="editForm" :model="editForm" :rules="rules" label-width="80px" class="my-dialog-form">
+  <el-dialog title="编辑" v-model="editFormV" :close-on-click-modal="false" width="480px">
+    <el-form ref="editForm" :model="editForm" :rules="rules" label-width="80px">
       <el-form-item label="客户">
-        <el-input v-model="editForm.exampleName"></el-input>
+        <el-input v-model="editForm.exampleName" maxlength="16" class="my-input"></el-input>
       </el-form-item>
       <el-form-item label="类型">
-        <el-select v-model="editForm.exampleType" placeholder="类型">
+        <el-select v-model="editForm.exampleType" placeholder="类型" class="my-input">
           <el-option v-for="(l,v) in dict.exampleType" :label="l" :value="v" :key="v"></el-option>
         </el-select>
       </el-form-item>
@@ -157,7 +157,7 @@ export default {
 </script>
 
 <style scoped>
-.my-dialog-form .el-input {
+.my-input {
   width: 300px;
 }
 </style>
