@@ -1,61 +1,40 @@
-
-import { createRouter, createWebHistory } from 'vue-router'
-import Index from './components/Index.vue'
-import UserCenter from './components/UserCenter.vue'
-import Resource from './components/grant/Resource.vue'
-
-import Home from './Home.vue'
+import {createRouter, createWebHistory} from 'vue-router'
 import Login from './Login.vue'
+import Home from './Home.vue'
+import Index from './components/Index.vue'
 
 const routerHistory = createWebHistory()
-
 const router = createRouter({
     history: routerHistory,
-    routes: [{
+    routes: [
+        {
+            path: '/',
+            component: Login
+        },
+        {
             path: '/Home',
             name: 'Home',
             component: Home,
-                children: [
-                    {
-                        path: '/userCenter',
-                        component: UserCenter
-                    }, {
-                        path: '/resource',
-                        component: Resource
-                    },{
-                        path: '/index',
-                        component: Index
-                    }
-                ]
-            },{
-                path: '/',
-                component: Login
-            }
+            children: [{
+                path: '/index',
+                component: Index
+            }]
+        }
     ]
 })
 
 // meta:{title:'测试路由test', noCache:true}
 router.addRoute('Home', {
-    path: '/example',
+    path: '/test/Example',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) fro this route
     // which is lazy-loaded when the route is visited
-    component: () => import('./components/test/Example11.vue')
+    component: () => import('./components/test/Example.vue')
 })
 
-router.addRoute('Home', {path:'/test/Example11', component:() => import('./components/test/Example11.vue')})
-router.addRoute('Home', {path:'/test/Example12', component:() => import('./components/test/Example12.vue')})
+router.addRoute('Home', {path: '/security/Res', component: () => import('./components/security/Res.vue')})
+router.addRoute('Home', {path: '/security/Role', component: () => import('./components/security/Role.vue')})
+router.addRoute('Home', {path: '/security/User', component: () => import('./components/security/User.vue')})
 
-
-
-router.addRoute('Home', {path:'/test/Example21', component:() => import('./components/test/Example21.vue')})
-router.addRoute('Home', {path:'/test/Example22', component:() => import('./components/test/Example22.vue')})
-
-router.addRoute('Home', {path:'/test/Example', component:() => import('./components/test/Example.vue')})
-
-router.addRoute('Home', {path:'/security/Res', component:() => import('./components/security/Res.vue')})
-
-router.addRoute('Home', {path:'/security/RoleRes', component:() => import('./components/security/RoleRes.vue')})
-router.addRoute('Home', {path:'/security/User', component:() => import('./components/security/User.vue')})
 
 export default router
