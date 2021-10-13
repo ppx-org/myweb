@@ -4,6 +4,7 @@ import VueAxios from 'vue-axios'
 import {utils} from "./utils";
 import {ElMessage} from "element-plus";
 
+
 let initConf = function(app) {
     let g = app.config.globalProperties;
 
@@ -122,6 +123,5 @@ let initConf = function(app) {
     );
 }
 
-
-
 export {initConf};
+

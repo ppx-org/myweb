@@ -1,5 +1,4 @@
 <template>
-
   <el-form :inline="true" :model="form" class="my-query-form">
     <el-form-item>
       <el-button @click="addFormV=true">新增</el-button>
@@ -23,18 +22,19 @@
     </el-form-item>
   </el-form>
 
-  <el-table empty-text="-"
-      @sort-change="(v) => this.$refs.Page.setOrder(v)" :data="tableData" border style="width: 100%">
+  <el-table empty-text="-" @sort-change="(v) => this.$refs.Page.setOrder(v)" :data="tableData" border
+            style="width: 100%">
     <el-table-column prop="exampleName" label="exampleName" sortable="custom"></el-table-column>
-    <el-table-column prop="exampleType" label="exampleType" :formatter="(v) => dict.exampleType[v.exampleType]"></el-table-column>
+    <el-table-column prop="exampleType" label="exampleType"
+                     :formatter="(v) => dict.exampleType[v.exampleType]"></el-table-column>
     <el-table-column prop="exampleTime" label="exampleTime" width="180"></el-table-column>
     <el-table-column prop="exampleTime" label="创建时间" width="180"></el-table-column>
     <el-table-column label="操作">
       <template v-slot="col">
-        <el-button size="mini" @click="edit(col.row.exampleId)">编辑</el-button>
+        <el-button @click="edit(col.row.exampleId)">编辑</el-button>
         <el-popconfirm title="确定删除吗？" @confirm="del(col.row.exampleId)">
           <template #reference>
-            <el-button size="mini" type="danger">删除</el-button>
+            <el-button type="danger">删除</el-button>
           </template>
         </el-popconfirm>
       </template>
@@ -43,12 +43,12 @@
   <my-page ref="Page" :query="queryPage"></my-page>
 
   <el-dialog title="新增" v-model="addFormV" :close-on-click-modal="false" width="500px">
-    <el-form ref="addForm" :model="addForm" :rules="rules" label-width="80px">
+    <el-form ref="addForm" :model="addForm" :rules="rules" label-width="80px" class="my-dialog-form">
       <el-form-item label="客户" prop="exampleName">
-        <el-input v-model="addForm.exampleName" style="width: 300px;"></el-input>
+        <el-input v-model="addForm.exampleName"></el-input>
       </el-form-item>
       <el-form-item label="类型">
-        <el-select v-model="addForm.exampleType" style="width: 300px;">
+        <el-select v-model="addForm.exampleType">
           <el-option v-for="(l,v) in dict.exampleType" :label="l" :value="v" :key="v"></el-option>
         </el-select>
       </el-form-item>
@@ -60,16 +60,18 @@
       </el-form-item>
     </el-form>
     <template #footer>
-            <span class="dialog-footer">
-              <el-button @click="addFormV = false">取 消</el-button>
-              <el-button type="primary" @click="insert">确 定</el-button>
-            </span>
+      <span class="dialog-footer">
+        <el-button @click="addFormV = false">取 消</el-button>
+        <el-button type="primary" @click="insert">确 定</el-button>
+      </span>
     </template>
   </el-dialog>
 
   <el-dialog title="编辑" v-model="editFormV" :close-on-click-modal="false" width="500px">
-    <el-form ref="editForm" :model="editForm" label-width="80px">
-      <el-form-item label="客户"><el-input v-model="editForm.exampleName"></el-input></el-form-item>
+    <el-form ref="editForm" :model="editForm" :rules="rules" label-width="80px" class="my-dialog-form">
+      <el-form-item label="客户">
+        <el-input v-model="editForm.exampleName"></el-input>
+      </el-form-item>
       <el-form-item label="类型">
         <el-select v-model="editForm.exampleType" placeholder="类型">
           <el-option v-for="(l,v) in dict.exampleType" :label="l" :value="v" :key="v"></el-option>
@@ -77,10 +79,10 @@
       </el-form-item>
     </el-form>
     <template #footer>
-            <span class="dialog-footer">
-              <el-button @click="editFormV = false">取 消</el-button>
-              <el-button type="primary" @click="update">确 定</el-button>
-            </span>
+      <span class="dialog-footer">
+        <el-button @click="editFormV = false">取 消</el-button>
+        <el-button type="primary" @click="update">确 定</el-button>
+      </span>
     </template>
   </el-dialog>
 </template>
@@ -123,7 +125,7 @@ export default {
     insert() {
       this.$refs['addForm'].validate((valid) => {
         if (!valid) return;
-        this.axios.post(`${ctrl}insert`, this.addForm).then(() => {
+        this.axios.post(`${ctrl}insert`, this.addForm, {headers: {hideLoading: false}}).then(() => {
           this.addFormV = false;
           this.queryPage();
         })
@@ -136,8 +138,7 @@ export default {
       })
     },
     update() {
-
-      this.axios.post(`${ctrl}update`, this.editForm, {headers:{hideLoading:false}}).then(() => {
+      this.axios.post(`${ctrl}update`, this.editForm, {headers: {hideLoading: false}}).then(() => {
         this.editFormV = false;
         this.queryPage();
       })
@@ -156,4 +157,7 @@ export default {
 </script>
 
 <style scoped>
+.my-dialog-form .el-input {
+  width: 300px;
+}
 </style>

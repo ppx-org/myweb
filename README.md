@@ -43,3 +43,13 @@ Error: spawn E:\plan_b\vue\test_workspace\vite3\node_modules\esbuild\esbuild.exe
 >>> element-variables.scss  ~改成node_modules/
 
 npm i --force
+
+# code...........................
+```javascript
+this.$refs[formName].resetFields()
+
+// main.js
+// console.log("xxxxx>>>>>>>>")
+// console.log(import.meta.env.MODE)
+// console.log(import.meta.env.VITE_SOME_KEY)
+```
