@@ -21,7 +21,8 @@ const router = createRouter({
             children: [{
                 path: '/Index',
                 component: Index
-            }]
+            }],
+            redirect: "/Index"
         }
     ]
 })
@@ -33,13 +34,5 @@ for (let i = 0; i < testRouter.length; i++) {
 for (let i = 0; i < securityRouter.length; i++) {
     router.addRoute('Home', securityRouter[i]);
 }
-
-
-
-
-// router.addRoute('Home', {path: '/security/Res', component: () => import('./components/security/Res.vue')})
-// router.addRoute('Home', {path: '/security/Role', component: () => import('./components/security/Role.vue')})
-// router.addRoute('Home', {path: '/security/User', component: () => import('./components/security/User.vue')})
-
 
 export default router

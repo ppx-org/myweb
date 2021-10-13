@@ -1,6 +1,7 @@
 <template>
   <el-col :span="12">
-    <el-menu router :default-openeds="defaultOpen" :uniqueOpened="true"
+    <el-menu :default-active="defaultActive" :default-openeds="defaultOpen"
+        router  :uniqueOpened="true"
              background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
       <el-submenu :key="m.id" :index="dIndex + ''" v-for="(m, dIndex) in menu" col>
         <template #title>
@@ -18,15 +19,18 @@
 export default {
   data() {
     return {
+      defaultActive: '',
       defaultOpen: ['0'],
       menu: []
     }
   },
   methods: {},
   mounted: function () {
+    this.defaultActive = this.$route.path;
     this.commonAxios.get("/security/menu/list", {}).then((res) => {
       this.menu = res.data.content;
     })
+
   }
 }
 </script>
