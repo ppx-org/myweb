@@ -67,25 +67,10 @@ html, body {
   text-align: center;
   line-height: 55px;
 }
+
 .el-aside {
   background-color: #D3DCE6;
   color: #333;
   line-height: 200px;
 }
-.el-main {
-  background-color: #E9EEF3;
-  color: #333;
-  padding: 2px;
-}
-body > .el-container {
-  margin-bottom:1px;
-}
-.el-container:nth-child(5) .el-aside,
-.el-container:nth-child(6) .el-aside {
-  line-height: 260px;
-}
-.el-container:nth-child(7) .el-aside {
-  line-height: 320px;
-}
-
 </style>
