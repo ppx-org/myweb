@@ -20,10 +20,8 @@ export default {
       this.query();
     },
     getParams(formObject) {
-      let r = Object.assign({page: this.page.page - 1, size: this.page.size, sort: this.page.sort}, formObject);
-      console.log(">>> request getParams")
-      console.log(r)
-      return r;
+      let params = Object.assign({page: this.page.page - 1, size: this.page.size, sort: this.page.sort}, formObject);
+      return params;
     },
     setPage(backJson) {
       this.page.total = backJson.totalElements;
