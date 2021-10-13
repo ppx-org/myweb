@@ -54,7 +54,8 @@ let initConf = function(app) {
 
     axios.interceptors.request.use(
         config => {
-            if (Object.hasOwn(config.headers, "hideLoading")) {
+            // eslint-disable-next-line no-prototype-builtins
+            if (config.headers.hasOwnProperty("hideLoading")) {
                 delete config.headers.hideLoading;
             }
 

@@ -1,14 +1,27 @@
 
 <template>
   <el-row class="row-bg" justify="center" style="align-items:center; height: 400px">
-    <el-form ref="ruleForm" :model="ruleForm" status-icon :rules="rules" label-width="120px" class="demo-ruleForm">
-      <el-form-item label="username" prop="username">
-        <el-input v-model.number="ruleForm.username" autocomplete="off" style="width:200px"></el-input>
+    <el-form ref="ruleForm" :model="ruleForm" status-icon :rules="rules" label-width="120px" size="small">
+
+      <el-form-item prop="username" label-width="0">
+        <el-input v-model="ruleForm.username" placeholder="请输入你的账号">
+          <template #prepend><i class="el-icon-user"></i></template>
+        </el-input>
       </el-form-item>
-      <el-form-item label="password" prop="password">
-        <el-input v-model="ruleForm.password" type="password" autocomplete="new-password" style="width:200px"/>
+
+      <el-form-item prop="password" label-width="0">
+        <el-input type="password" v-model="ruleForm.username" placeholder="请输入你的账号">
+          <template #prepend><i class="el-icon-lock"></i></template>
+        </el-input>
       </el-form-item>
-      <el-form-item>
+
+<!--      <el-form-item label="username" prop="username">-->
+<!--        <el-input v-model.number="ruleForm.username" autocomplete="off" style="width:200px"></el-input>-->
+<!--      </el-form-item>-->
+<!--      <el-form-item label="password" prop="password">-->
+<!--        <el-input v-model="ruleForm.password" type="password" autocomplete="new-password" style="width:200px"/>-->
+<!--      </el-form-item>-->
+      <el-form-item label-width="0" style="text-align: center">
         <el-button type="primary" @click="submitForm('ruleForm')">login</el-button>
       </el-form-item>
     </el-form>
@@ -56,7 +69,7 @@ export default {
               this.$router.push('/Home')
             }
             else {
-              alert(res.data.msg);
+              alert(res.data.content);
             }
           })
         } else {
