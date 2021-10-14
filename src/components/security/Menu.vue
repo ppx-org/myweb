@@ -1,16 +1,16 @@
 <template>
   <el-col :span="12">
-    <el-menu :default-active="defaultActive" :default-openeds="defaultOpen"
+    <el-menu ref="Menu"  :default-active="defaultActive" :default-openeds="defaultOpen"
         router  :uniqueOpened="true"
              background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-      <el-submenu :key="m.id" :index="dIndex + ''" v-for="(m, dIndex) in menu" col>
+      <el-sub-menu :key="m.id" :index="dIndex + ''" v-for="(m, dIndex) in menu" col>
         <template #title>
           <i class="el-icon-folder"></i><span>{{ m.title }}</span>
         </template>
-        <el-menu-item :key="s.id" :index="s.path" v-for="(s) in m.sub" class="menu-title" style="margin-left:-10px">
+        <el-menu-item :key="s.id" :index="s.path" v-for="(s) in m.sub" class="menu-title">
           <i class="el-icon-menu"></i>{{ s.title }}
         </el-menu-item>
-      </el-submenu>
+      </el-sub-menu>
     </el-menu>
   </el-col>
 </template>
@@ -20,15 +20,22 @@ export default {
   data() {
     return {
       defaultActive: '',
-      defaultOpen: ['0'],
+      defaultOpen: [],
       menu: []
     }
   },
   methods: {},
   mounted: function () {
-    this.defaultActive = this.$route.path;
     this.commonAxios.get("/security/menu/list", {}).then((res) => {
       this.menu = res.data.content;
+      this.$nextTick(function() {
+        if (this.$route.path === "/Index") {
+          this.$refs.Menu.open('0')
+        }
+        else {
+          this.defaultActive = this.$route.path;
+        }
+      })
     })
 
   }
@@ -41,7 +48,7 @@ export default {
   width: 200px
 }
 
-.el-submenu .el-menu-item {
+.el-sub-menu .el-menu-item {
   min-width: auto
 }
 

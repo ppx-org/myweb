@@ -6,7 +6,7 @@
     </el-row>
     <el-menu ref="menu" :default-active="activeIndex"
              :uniqueOpened="true" background-color="#545c64"  text-color="#fff" active-text-color="#ffd04b">
-      <el-submenu :key="d.id" :index="d.id + ''" v-for="(d, dIndex) in menu">
+      <el-sub-menu :key="d.id" :index="d.id + ''" v-for="(d, dIndex) in menu">
         <template #title>
           <span @click.stop="itemClick(d)" class="my_title" :id="'title_' + d.id"><i class="el-icon-folder"></i>{{d.title}}</span>
           <el-button @click.stop="editDir(d, dIndex, menu.length)" style="float:right;margin-right:25px;margin-top:15px">修改</el-button>
@@ -15,7 +15,7 @@
             <template #reference><i class="el-icon-delete"></i></template>
           </el-popconfirm>
         </template>
-        <el-submenu :key="m.id" :index="m.id + ''" v-for="(m, mIndex) in d.sub" class="menu-title">
+        <el-sub-menu :key="m.id" :index="m.id + ''" v-for="(m, mIndex) in d.sub" class="menu-title">
           <template #title>
             <span @click.stop="itemClick(m)" class="my_title" :id="'title_' + m.id" ><i class="el-icon-menu"></i>{{m.title}}</span>
             <el-button @click.stop="editMenu(m, mIndex, d.sub.length)" style="float:right;margin-right:25px;margin-top:15px">修改</el-button>
@@ -33,8 +33,8 @@
               </el-popconfirm>
             </template>
           </el-menu-item>
-        </el-submenu>
-      </el-submenu>
+        </el-sub-menu>
+      </el-sub-menu>
     </el-menu>
   </el-col>
 

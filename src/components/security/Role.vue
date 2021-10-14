@@ -128,7 +128,7 @@ export default {
       this.editFormV = true;
     },
     update() {
-      this.$refs['addForm'].validate((valid) => {
+      this.$refs['editForm'].validate((valid) => {
         if (!valid) return;
         this.axios.post(`${ctrl}update`, this.editForm, {headers: {hideLoading: false}}).then(() => {
           this.editFormV = false;
