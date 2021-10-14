@@ -49,7 +49,7 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (!valid) return;
 
-        this.axios.post("/security/login/login", this.form).then((res) => {
+        this.commonAxios.post("/security/login/login", this.form).then((res) => {
             localStorage.setItem("my_token", res.data.content);
             this.$router.push('/Home')
         })
