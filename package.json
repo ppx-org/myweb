@@ -28,6 +28,7 @@
     "eslint-plugin-vue": "^7.0.0",
     "sass": "^1.27.0",
     "sass-loader": "^10.0.4",
+    "unplugin-vue-components": "^0.15.6",
     "vite": "^2.5.10",
     "vue-cli-plugin-element-plus": "~0.0.13"
   },
