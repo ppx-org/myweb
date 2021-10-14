@@ -13,15 +13,18 @@
     </el-form>
 
     <el-table :data="tableData" border >
-      <el-table-column prop="userId" label="用户ID" width="100"></el-table-column>
-      <el-table-column prop="username" label="用户名称" width="">
+      <el-table-column prop="userId" label="用户ID" width="80"></el-table-column>
+      <el-table-column prop="username" label="用户名称">
         <template v-slot="col">
           <el-link type="primary" @click="selectUser(col.row)" href="#">{{ col.row.username }}</el-link>
         </template>
       </el-table-column>
+      <el-table-column prop="enable" label="状态" :formatter="(v) => dict.enable[v.enable]" width="80"></el-table-column>
       <el-table-column label="操作" width="200">
         <template v-slot="col">
-          <el-button size="mini" @click="edit(col.row)">编辑</el-button>
+          <el-button @click="edit(col.row)">编辑</el-button>
+          <el-button @click="enable(col.row)" v-if="col.row.enable">禁用</el-button>
+          <el-button @click="enable(col.row)" v-if="!col.row.enable">可用</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -41,7 +44,7 @@
         <template v-slot="col">
           <el-popconfirm title="确定删除吗？" @confirm="userDelRole(col.row)">
             <template #reference>
-              <el-button size="mini" type="danger">删除</el-button>
+              <el-button type="danger">删除</el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -61,7 +64,7 @@
       <el-table-column prop="roleName" label="角色名称"></el-table-column>
       <el-table-column label="操作" width="110">
         <template v-slot="col">
-          <el-button size="mini" @click="userAddRole(col.row)">添加角色</el-button>
+          <el-button @click="userAddRole(col.row)">添加角色</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -133,6 +136,9 @@ export default {
       addFormV: false,
       editFormV: false,
       passwordOld: '',
+      dict: {
+        enable: {'true': '正常', 'false': '禁用'}
+      }
     }
   },
   methods: {
@@ -162,9 +168,15 @@ export default {
       if (this.editForm.password === this.passwordOld) {
         editForm.password = null;
       }
-      this.axios.post(`${ctrl}update`, editForm).then(() => {
+      this.axios.post(`${ctrl}update`, editForm, {headers: {hideLoading: false}}).then(() => {
           this.editFormV = false;
           this.queryPage();
+      })
+    },
+    enable(row) {
+      let action = row.enable ? "disable" : "enable";
+      this.axios.post(`${ctrl}${action}`, {userId:row.userId}, {headers: {hideLoading: false}}).then(() => {
+        this.queryPage();
       })
     },
     selectUser(item) {

@@ -2,6 +2,9 @@
 
   <el-col :span="8">
     <el-form :inline="true" :model="form" class="my-query-form">
+      <el-form-item>
+        <el-button @click="addFormV=true">新增</el-button>
+      </el-form-item>
       <el-form-item label="角色名称">
         <el-input v-model="form.roleName" placeholder="角色名称"></el-input>
       </el-form-item>
@@ -11,9 +14,19 @@
     </el-form>
 
     <el-table :data="tableData" border style="width: 600px">
-      <el-table-column prop="roleName" label="角色名称" @click="test()">
+      <el-table-column prop="roleName" label="角色名称">
         <template v-slot="col">
-          <el-link type="primary" @click="test(col.row)" href="#">{{ col.row.roleName }}</el-link>
+          <el-link type="primary" @click="selectRole(col.row)" href="#">{{ col.row.roleName }}</el-link>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="200">
+        <template v-slot="col">
+          <el-button @click="edit(col.row)">编辑</el-button>
+          <el-popconfirm title="确定删除吗？" @confirm="del(col.row)">
+            <template #reference>
+              <el-button type="danger">删除</el-button>
+            </template>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -36,6 +49,34 @@
            :props="defaultProps" style="width: 400px;"/>
   </el-col>
 
+  <el-dialog title="新增" v-model="addFormV" :close-on-click-modal="false" width="480px">
+    <el-form ref="addForm" :model="addForm" :rules="rules" label-width="80px">
+      <el-form-item label="角色名称" prop="roleName">
+        <el-input v-model="addForm.roleName" class="my-input" maxlength="16"></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="addFormV = false">取 消</el-button>
+        <el-button type="primary" @click="insert">确 定</el-button>
+      </span>
+    </template>
+  </el-dialog>
+
+  <el-dialog title="编辑" v-model="editFormV" :close-on-click-modal="false" width="500px">
+    <el-form ref="editForm" :model="editForm" label-width="80px">
+      <el-form-item label="角色名称" prop="roleName">
+        <el-input v-model="editForm.roleName" class="my-input" maxlength="16"></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="editFormV = false">取 消</el-button>
+        <el-button type="primary" @click="update">确 定</el-button>
+      </span>
+    </template>
+  </el-dialog>
+
 </template>
 
 <script>
@@ -52,6 +93,15 @@ export default {
         roleId: '',
         roleName: '',
       },
+      addForm: {...this.form},
+      editForm: {...this.form},
+      addFormV: false,
+      editFormV: false,
+      rules: {
+        roleName: [
+          {required: true, message: '必填'}
+        ]
+      },
       selectedRoleId: '',
       selectedRoleName: '无'
     }
@@ -64,31 +114,45 @@ export default {
         this.tableData = res.data.content;
       })
     },
-    test(item) {
-      // listResIdByRole
-      let params = {roleId:item.roleId};
+    insert() {
+      this.$refs['addForm'].validate((valid) => {
+        if (!valid) return;
+        this.axios.post(`${ctrl}insert`, this.addForm, {headers: {hideLoading: false}}).then(() => {
+          this.addFormV = false;
+          this.queryPage();
+        })
+      })
+    },
+    edit(row) {
+      this.editForm = {roleId: row.roleId, roleName: row.roleName};
+      this.editFormV = true;
+    },
+    update() {
+      this.$refs['addForm'].validate((valid) => {
+        if (!valid) return;
+        this.axios.post(`${ctrl}update`, this.editForm, {headers: {hideLoading: false}}).then(() => {
+          this.editFormV = false;
+          this.queryPage();
+        })
+      })
+    },
+    del(row) {
+      this.axios.post(`${ctrl}del?id=${row.roleId}`).then(() => {
+        this.queryPage();
+      })
+    },
+    selectRole(role) {
+      let params = {roleId:role.roleId};
       this.axios.get(`${ctrl}listResIdByRole`, {params}).then((res) => {
         this.$refs.resTree.setCheckedNodes([]);
-
-
-        // this.$refs.resTree.setCheckedNodes(res.data.content)
         const checkedResId = res.data.content;
         for (let i = 0; i < checkedResId.length; i++) {
           this.$refs.resTree.setChecked(checkedResId[i], true, false);
         }
-        // this.checkedKeys = res.data.content;
       });
 
-      this.selectedRoleId = item.roleId;
-      this.selectedRoleName = item.roleName;
-
-      // setCheckedNodes
-      // let nodes = this.$refs.resTree.getCheckedNodes(false, true);
-      // let id = [];
-      // for (let i = 0; i < nodes.length; i++) {
-      //   id.push(nodes[i].id);
-      // }
-      // alert(id);
+      this.selectedRoleId = role.roleId;
+      this.selectedRoleName = role.roleName;
     },
     saveRoleRes() {
       if (!this.selectedRoleId) {
@@ -111,7 +175,7 @@ export default {
   created: function() {
     let api = "/security/res/listAllRes";
     this.axios.get(api, {}).then((res) => {
-      const treeData = [{id: 0, title: '资源x', sub: res.data.content}]
+      const treeData = [{id: 0, title: '资源', sub: res.data.content}]
       this.data = treeData;
     })
   },
@@ -120,3 +184,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.my-input {
+  width: 300px;
+}
+</style>

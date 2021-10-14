@@ -11,7 +11,7 @@
           <span @click.stop="itemClick(d)" class="my_title" :id="'title_' + d.id"><i class="el-icon-folder"></i>{{d.title}}</span>
           <el-button @click.stop="editDir(d, dIndex, menu.length)" style="float:right;margin-right:25px;margin-top:15px">修改</el-button>
           <el-button @click.stop="addMenu(d)" style="float:right;margin-right:15px;margin-top:15px">+菜单</el-button>
-          <el-popconfirm title="确定删除吗？" @confirm="delRes(d.id)" style="float:right;margin-top:18px">
+          <el-popconfirm title="确定删除吗？" @confirm="delRes(d)" style="float:right;margin-top:18px">
             <template #reference><i class="el-icon-delete"></i></template>
           </el-popconfirm>
         </template>
@@ -20,7 +20,7 @@
             <span @click.stop="itemClick(m)" class="my_title" :id="'title_' + m.id" ><i class="el-icon-menu"></i>{{m.title}}</span>
             <el-button @click.stop="editMenu(m, mIndex, d.sub.length)" style="float:right;margin-right:25px;margin-top:15px">修改</el-button>
             <el-button @click.stop="addOperate(m)" style="float:right;margin-right:15px;margin-top:15px">+操作</el-button>
-            <el-popconfirm title="确定删除吗？" @confirm="delRes(d.id)" style="float:right;margin-top:18px">
+            <el-popconfirm title="确定删除吗？" @confirm="delRes(d)" style="float:right;margin-top:18px">
               <template #reference><i class="el-icon-delete"></i></template>
             </el-popconfirm>
           </template>
@@ -28,7 +28,7 @@
             <template #title>
               <span class="my_title" :id="'title_' + o.id"><i class="el-icon-setting"></i>{{o.title}}</span>
               <el-button @click.stop="editOperate(o, oIndex, m.sub.length)" style="float:right;margin-top:10px">修改</el-button>
-              <el-popconfirm title="确定删除吗？" @confirm="delRes(o.id)" style="float:right;margin-top:18px">
+              <el-popconfirm title="确定删除吗？" @confirm="delRes(o)" style="float:right;margin-top:18px">
                 <template #reference><i class="el-icon-delete"></i></template>
               </el-popconfirm>
             </template>
@@ -48,7 +48,7 @@
         <template v-slot="col">
           <el-popconfirm title="确定删除吗？" @confirm="resDelUri(col.row)">
             <template #reference>
-              <el-button size="mini" type="danger">删除</el-button>
+              <el-button type="danger">删除</el-button>
             </template>
           </el-popconfirm>
         </template>
@@ -73,7 +73,7 @@
       <el-table-column prop="uriPath" label="URI_PATH"></el-table-column>
       <el-table-column label="操作" width="100">
         <template v-slot="col">
-          <el-button size="mini" @click="resAddUri(col.row.uriPath)">添加URI</el-button>
+          <el-button @click="resAddUri(col.row.uriPath)">添加URI</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -299,8 +299,8 @@ export default {
         })
       })
     },
-    delRes(id) {
-      this.axios.post(`${ctrl}delResAndChildren`, {id:id}).then(() => {
+    delRes(res) {
+      this.axios.post(`${ctrl}del`, {id:res.id}).then(() => {
         this.loadAllRes();
       })
     },

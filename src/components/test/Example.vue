@@ -25,14 +25,13 @@
   <el-table empty-text="-" @sort-change="(v) => this.$refs.Page.setOrder(v)" :data="tableData" border
             style="width: 100%">
     <el-table-column prop="exampleName" label="exampleName" sortable="custom"></el-table-column>
-    <el-table-column prop="exampleType" label="exampleType"
-                     :formatter="(v) => dict.exampleType[v.exampleType]"></el-table-column>
+    <el-table-column prop="exampleType" label="exampleType" :formatter="(v) => dict.exampleType[v.exampleType]"></el-table-column>
     <el-table-column prop="exampleTime" label="exampleTime" width="180"></el-table-column>
     <el-table-column prop="exampleTime" label="创建时间" width="180"></el-table-column>
     <el-table-column label="操作">
       <template v-slot="col">
         <el-button @click="edit(col.row.exampleId)">编辑</el-button>
-        <el-popconfirm title="确定删除吗？" @confirm="del(col.row.exampleId)">
+        <el-popconfirm title="确定删除吗？" @confirm="del(col.row)">
           <template #reference>
             <el-button type="danger">删除</el-button>
           </template>
@@ -143,8 +142,8 @@ export default {
         this.queryPage();
       })
     },
-    del(id) {
-      this.axios.post(`${ctrl}del?id=${id}`).then(() => {
+    del(row) {
+      this.axios.post(`${ctrl}del?id=${row.exampleId}`).then(() => {
         this.queryPage();
       })
     },
