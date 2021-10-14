@@ -12,7 +12,7 @@ export default defineConfig({
   plugins: [vue(), Components({
     resolvers: [ElementPlusResolver()],
 
-  }), viteCompression({deleteOriginFile:true})],
+  }), viteCompression({deleteOriginFile:false})],
   server: {
     proxy: {
       // Using the proxy instance
