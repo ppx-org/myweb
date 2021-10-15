@@ -22,8 +22,7 @@ function getResponse(response) {
         localStorage.setItem("my_token", token);
     }
 
-    const UNAUTHORIZED = 4010;
-    if (response.data.code === UNAUTHORIZED) {
+    if (response.data.code >= 4000 && response.data.code <= 4099) {
         ElMessage.warning(response.data.content);
         return Promise.reject(response);
     }

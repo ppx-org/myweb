@@ -87,7 +87,7 @@
 </template>
 
 <script>
-const ctrl = "/test/example/"
+const action = "/test/example/"
 export default {
   data() {
     return {
@@ -116,7 +116,7 @@ export default {
   methods: {
     queryPage() {
       let params = this.$refs.Page.getParams(this.form);
-      this.axios.get(`${ctrl}page`, {params}).then((res) => {
+      this.axios.get(`${action}page`, {params}).then((res) => {
         this.$refs.Page.setPage(res.data);
         this.tableData = res.data.content;
       })
@@ -124,26 +124,26 @@ export default {
     insert() {
       this.$refs['addForm'].validate((valid) => {
         if (!valid) return;
-        this.axios.post(`${ctrl}insert`, this.addForm, {headers: {hideLoading: false}}).then(() => {
+        this.axios.post(`${action}insert`, this.addForm, {headers: {hideLoading: false}}).then(() => {
           this.addFormV = false;
           this.queryPage();
         })
       })
     },
     edit(id) {
-      this.axios.get(`${ctrl}get?id=${id}`).then((res) => {
+      this.axios.get(`${action}get?id=${id}`).then((res) => {
         this.editForm = res.data.content;
         this.editFormV = true;
       })
     },
     update() {
-      this.axios.post(`${ctrl}update`, this.editForm, {headers: {hideLoading: false}}).then(() => {
+      this.axios.post(`${action}update`, this.editForm, {headers: {hideLoading: false}}).then(() => {
         this.editFormV = false;
         this.queryPage();
       })
     },
     del(row) {
-      this.axios.post(`${ctrl}del?id=${row.exampleId}`).then(() => {
+      this.axios.post(`${action}del?id=${row.exampleId}`).then(() => {
         this.queryPage();
       })
     },

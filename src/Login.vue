@@ -7,7 +7,7 @@
         </el-input>
       </el-form-item>
       <el-form-item prop="password" label-width="0">
-        <el-input type="password" v-model="form.username" placeholder="请输入你的密码">
+        <el-input type="password" v-model="form.password" placeholder="请输入你的密码">
           <template #prepend><i class="el-icon-lock"></i></template>
         </el-input>
       </el-form-item>
@@ -19,7 +19,7 @@
 </template>
 
 <script>
-
+const action = "/security/home/"
 export default {
   data() {
     const checkUsername = (rule, value, callback) => {
@@ -50,16 +50,13 @@ export default {
       this.$refs[formName].validate((valid) => {
         if (!valid) return;
 
-        this.commonAxios.post("/security/login/login", this.form).then((res) => {
-            localStorage.setItem("my_token", res.data.content.token);
-
-            this.$store.state.username = res.data.content.username;
-
-
-            this.$router.push('/Home');
+        this.commonAxios.post(`${action}login`, this.form).then((res) => {
+          localStorage.setItem("my_token", res.data.content.token);
+          this.$store.state.username = res.data.content.username;
+          this.$router.push('/Home');
         })
       })
-    }
+    },
   }
 }
 </script>

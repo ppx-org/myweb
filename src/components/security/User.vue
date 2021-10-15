@@ -89,7 +89,7 @@
   </el-dialog>
 
   <el-dialog title="编辑" v-model="editFormV" :close-on-click-modal="false" width="500px">
-    <el-form ref="editForm" :model="editForm" label-width="80px">
+    <el-form ref="editForm" :model="editForm" :rules="rules" label-width="80px">
       <el-form-item label="用户名称" prop="username">
           <el-input v-model="editForm.username" class="my-input" maxlength="16"></el-input>
       </el-form-item>
