@@ -9,11 +9,16 @@
         </el-popconfirm>
         <i class="el-icon-lock" title="修改密码" style="margin-left: 6px;color:blue;cursor: pointer;" @click="editPassword"></i>
         <i class="el-icon-s-custom" style="margin-left: 6px"></i><span>{{username}}</span>
+
+
+
       </div>
       <div style="float: left; margin-left:10px">
         <i class="el-icon-menu"></i><span style="padding-left: 5px">{{title}}</span>
       </div>
-
+      <div style="float:right">
+        <i class="el-icon-s-home" style="color:blue;cursor: pointer;" title="首页" @click="toHome"></i>
+      </div>
     </el-header>
     <el-container>
       <el-aside width="200px"><Menu @setTitle="setTitle"/></el-aside>
@@ -70,6 +75,9 @@ export default {
     Menu
   },
   methods: {
+    toHome() {
+      this.$router.push('/Index');
+    },
     logout() {
       this.commonAxios.post(`${action}logout`, {}).then(() => {
         this.$router.push('/');
