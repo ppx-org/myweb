@@ -1,14 +1,14 @@
 <template>
   <el-col :span="12">
-    <el-menu ref="Menu"  :default-active="defaultActive" :default-openeds="defaultOpen"
-        router  :uniqueOpened="true"
+    <el-menu ref="Menu" :default-active="defaultActive" :default-openeds="defaultOpen"
+        router :uniqueOpened="true"
              background-color="#545c64" text-color="#fff" active-text-color="#ffd04b">
-      <el-sub-menu :key="m.id" :index="dIndex + ''" v-for="(m, dIndex) in menu" col>
+      <el-sub-menu :key="d.id" :index="dIndex + ''" v-for="(d, dIndex) in menu" col>
         <template #title>
-          <i class="el-icon-folder"></i><span>{{ m.title }}</span>
+          <i class="el-icon-folder"></i><span>{{ d.title }}</span>
         </template>
-        <el-menu-item :key="s.id" :index="s.path" v-for="(s) in m.sub" class="menu-title">
-          <i class="el-icon-menu"></i>{{ s.title }}
+        <el-menu-item :key="m.id" :index="m.path" v-for="(m) in d.sub" class="menu-title" @click="menuClick(m)">
+          <i class="el-icon-menu"></i><span :id="'menu' + m.path">{{ m.title }}</span>
         </el-menu-item>
       </el-sub-menu>
     </el-menu>
@@ -24,9 +24,13 @@ export default {
       menu: []
     }
   },
-  methods: {},
+  methods: {
+    menuClick(m) {
+      this.$emit('setTitle', m.title);
+    }
+  },
   mounted: function () {
-    this.commonAxios.get("/security/menu/list", {}).then((res) => {
+    this.commonAxios.get("/security/home/listMenu", {}).then((res) => {
       this.menu = res.data.content;
       this.$nextTick(function() {
         if (this.$route.path === "/Index") {
@@ -34,6 +38,8 @@ export default {
         }
         else {
           this.defaultActive = this.$route.path;
+          let title = document.getElementById("menu" + this.$route.path).innerText;
+          this.$emit('setTitle', title);
         }
       })
     })

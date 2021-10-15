@@ -21,6 +21,12 @@ function getResponse(response) {
         let token = response.headers.authorization;
         localStorage.setItem("my_token", token);
     }
+
+    const UNAUTHORIZED = 4010;
+    if (response.data.code === UNAUTHORIZED) {
+        ElMessage.warning(response.data.content);
+        return Promise.reject(response);
+    }
     return response;
 }
 function getResponseError(error) {

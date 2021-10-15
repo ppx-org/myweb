@@ -19,6 +19,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     const checkUsername = (rule, value, callback) => {
@@ -50,8 +51,12 @@ export default {
         if (!valid) return;
 
         this.commonAxios.post("/security/login/login", this.form).then((res) => {
-            localStorage.setItem("my_token", res.data.content);
-            this.$router.push('/Home')
+            localStorage.setItem("my_token", res.data.content.token);
+
+            this.$store.state.username = res.data.content.username;
+
+
+            this.$router.push('/Home');
         })
       })
     }
