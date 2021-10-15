@@ -22,7 +22,7 @@
   </el-container>
 
 
-  <el-dialog title="修改密码" v-model="editPasswordV" :close-on-click-modal="false" width="500px">
+  <el-dialog title="修改密码" v-model="editPasswordV" :close-on-click-modal="false" width="400px">
     <el-form ref="passwordForm" :model="passwordForm" :rules="rules" label-width="80px">
       <el-form-item label="当前密码" prop="oldPassword">
         <el-input type="password" autocomplete="new-password" v-model="passwordForm.oldPassword" class="my-input" maxlength="16"></el-input>
@@ -43,10 +43,8 @@
   </el-dialog>
 
 </template>
-
 <script>
 const action = "/security/home/"
-
 import Menu from './components/security/Menu.vue'
 export default {
   data() {
@@ -54,6 +52,7 @@ export default {
       loading: false,
       title: '首页',
       username: '',
+
       passwordForm: {
         oldPassword: '',
         newPassword: '',
@@ -64,9 +63,7 @@ export default {
         newPassword: [{required: true, message: '必填'}],
         newPassword2: [{required: true, message: '必填'}],
       },
-
       editPasswordV: false,
-
     }
   },
   components: {
@@ -74,7 +71,6 @@ export default {
   },
   methods: {
     logout() {
-      // logout
       this.commonAxios.post(`${action}logout`, {}).then(() => {
         this.$router.push('/');
       })
@@ -85,14 +81,14 @@ export default {
     updatePassword() {
       this.$refs['passwordForm'].validate((valid) => {
         if (!valid) return;
-        if (this.passwordForm.newPassword != this.passwordForm.newPassword2) {
+        if (this.passwordForm.newPassword !== this.passwordForm.newPassword2) {
           this.$message.warning("新密码和确认密码不一致");
           return;
         }
-
         let param = {oldPassword: this.passwordForm.oldPassword, newPassword: this.passwordForm.newPassword}
         this.commonAxios.post(`${action}updatePassword`, param).then(() => {
-          alert("成功");
+          this.$message.success("修改密码成功，请重新登录");
+          this.$router.push('/');
         })
       })
     },
@@ -148,9 +144,7 @@ html, body {
 
 <style scoped>
 .el-header, .el-footer {
-  /*background-color: #B3C0D1;*/
-  background-color: #D3DCE6;;
-  color: #333;
+  background-color: #D3DCE6;
   line-height: 40px;
   color: black;
 }
@@ -164,15 +158,8 @@ html, body {
   color: #333;
   padding: 2px;
 }
-body > .el-container {
-  margin-bottom:1px;
-}
 
-/*.el-container:nth-child(5) .el-aside,*/
-/*.el-container:nth-child(6) .el-aside {*/
-/*  line-height: 260px;*/
-/*}*/
-/*.el-container:nth-child(7) .el-aside {*/
-/*  line-height: 320px;*/
-/*}*/
+.my-input {
+  width: 250px;
+}
 </style>
