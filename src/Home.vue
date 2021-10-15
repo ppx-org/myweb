@@ -10,8 +10,6 @@
         <i class="el-icon-lock" title="修改密码" style="margin-left: 6px;color:blue;cursor: pointer;" @click="editPassword"></i>
         <i class="el-icon-s-custom" style="margin-left: 6px"></i><span>{{username}}</span>
 
-
-
       </div>
       <div style="float: left; margin-left:10px">
         <i class="el-icon-menu"></i><span style="padding-left: 5px">{{title}}</span>
@@ -21,8 +19,8 @@
       </div>
     </el-header>
     <el-container>
-      <el-aside width="200px"><Menu @setTitle="setTitle"/></el-aside>
-      <el-main v-loading="loading"><router-view></router-view></el-main>
+      <el-aside width="200px"><Menu ref="Menu" @setTitle="setTitle"/></el-aside>
+      <el-main v-loading="loading"><router-view ></router-view></el-main>
     </el-container>
   </el-container>
 
@@ -76,7 +74,11 @@ export default {
   },
   methods: {
     toHome() {
+      this.$refs["Menu"].setDefaultActive();
       this.$router.push('/Index');
+
+      // alert(a)
+
     },
     logout() {
       this.commonAxios.post(`${action}logout`, {}).then(() => {

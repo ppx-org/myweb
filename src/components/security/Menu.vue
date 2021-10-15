@@ -7,8 +7,8 @@
         <template #title>
           <i class="el-icon-folder"></i><span>{{ d.title }}</span>
         </template>
-        <el-menu-item :key="m.id" :index="m.path" v-for="(m) in d.sub" class="menu-title" @click="menuClick(m)">
-          <i class="el-icon-menu"></i><span :id="'menu' + m.path">{{ m.title }}</span>
+        <el-menu-item :id="'menu' + m.path" :key="m.id" :index="m.path" v-for="(m) in d.sub" class="menu-title" @click="menuClick(m)">
+          <i class="el-icon-menu"></i><span>{{ m.title }}</span>
         </el-menu-item>
       </el-sub-menu>
     </el-menu>
@@ -26,8 +26,15 @@ export default {
   },
   methods: {
     menuClick(m) {
+      document.getElementById("menu" + m.path).classList.add("is-active");
       this.$emit('setTitle', m.title);
-    }
+    },
+    setDefaultActive() {
+      document.querySelectorAll(".el-menu-item").forEach(e => {
+        e.classList.remove("is-active");
+      });
+      this.$emit('setTitle', '首页');
+    },
   },
   mounted: function () {
     this.commonAxios.get("/security/home/listMenu", {}).then((res) => {
