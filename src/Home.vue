@@ -18,9 +18,15 @@
         <i class="el-icon-s-home" style="color:blue;cursor: pointer;" title="首页" @click="toHome"></i>
       </div>
     </el-header>
-    <el-container>
+    <el-container  style="overflow-y: hidden">
+
       <el-aside width="200px"><Menu ref="Menu" @setTitle="setTitle"/></el-aside>
-      <el-main v-loading="loading"><router-view ></router-view></el-main>
+      <el-main v-loading="loading">
+
+          <router-view ></router-view>
+
+      </el-main>
+
     </el-container>
   </el-container>
 
