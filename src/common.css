@@ -16,3 +16,6 @@
   --el-link-font-color: var(--el-color-primary);
   color: var(--el-link-font-color);
 }
+
+a{text-decoration:none}
+a:link,a:visited {color:blue;}
