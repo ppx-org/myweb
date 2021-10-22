@@ -274,6 +274,7 @@ export default {
       this.editForm.resType = m.t;
       this.editForm.resId = m.id;
       this.editForm.resName = m.title;
+      this.editForm.menuPath = m.path;
     },
     editOperate(o, oIndex, oSize) {
       this.tmpResSort = [];

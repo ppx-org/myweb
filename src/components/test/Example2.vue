@@ -16,7 +16,8 @@
       <el-date-picker v-model="form.exampleTime" type="datetime" value-format="YYYY-MM-DD HH:mm:ss"></el-date-picker>
     </el-form-item>
     <el-form-item>
-      <a href="#" @click="advanced = !advanced">{{ advanced ? '收起' : '展开'}}
+      <a href="#" @click="advanced = !advanced">
+        <span>{{ advanced ? '收起' : '展开'}}</span>
         <i :class="advanced ? 'el-icon-arrow-up' : 'el-icon-arrow-down'" />
       </a>
       <el-button type="primary" @click="queryPage">查询</el-button>
