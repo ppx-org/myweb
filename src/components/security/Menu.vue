@@ -45,7 +45,11 @@ export default {
         }
         else {
           this.defaultActive = this.$route.path;
-          let title = document.getElementById("menu" + this.$route.path).innerText;
+          let title = '';
+          let menuPathObj = document.getElementById("menu" + this.$route.path);
+          if (menuPathObj) {
+            title = menuPathObj.innerText;
+          }
           this.$emit('setTitle', title);
         }
       })

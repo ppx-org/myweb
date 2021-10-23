@@ -1,7 +1,7 @@
 <template>
   <el-pagination @size-change="queryPage" @current-change="queryPage" v-model:currentPage="page.page" class="my-pagination"
                  layout="total, sizes, prev, pager, next"
-                 :page-sizes="[3, 10, 100]" v-model:page-size="page.size" :total="page.total">
+                 :page-sizes="[10, 20, 100]" v-model:page-size="page.size" :total="page.total">
   </el-pagination>
 </template>
 
@@ -11,7 +11,7 @@ export default {
   data() {
     return {
       page: {
-        size: 3, page: 1, total: 0, sort: []
+        size: 10, page: 1, total: 0, sort: []
       }
     }
   },

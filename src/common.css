@@ -3,6 +3,7 @@
 .my-query-form .el-form-item {
   margin-top: 4px;
   height: 16px;
+  margin-left: 10px;
 }
 .my-pagination .el-pager {
   margin-top: -1px;
