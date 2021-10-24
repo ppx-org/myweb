@@ -9,7 +9,7 @@
     <el-form-item label="类型" style="width:150px">
       <el-select v-model="form.exampleType" placeholder="类型">
         <el-option label="全部" value=""></el-option>
-        <el-option :key="v" v-for="(l,v) in dict.exampleType" :label="l" :value="v"></el-option>
+        <el-option :key="v" v-for="(l,v) in dict.exampleTypeAll" :label="l" :value="v"></el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="日期">
@@ -110,14 +110,19 @@ export default {
       addFormV: false,
       editFormV: false,
       dict: {
-        exampleType: {}
+        exampleType: {},
+        exampleTypeAll: {},
       }
     }
   },
   methods: {
-    queryPage() {
+    queryPage(dictType, dictCallBack) {
       let params = this.$refs.Page.getParams(this.form);
+      params.dictType = dictType;
       this.axios.get(`${action}page`, {params}).then((res) => {
+        if (dictCallBack) {
+          dictCallBack.call(this, res.data.ext);
+        }
         this.$refs.Page.setPage(res.data);
         this.tableData = res.data.content;
       })
@@ -156,12 +161,11 @@ export default {
     }
   },
   mounted() {
-    this.queryDict(["exampleType"], function(content) {
-      this.dict.exampleType = content.exampleType;
+    this.queryPage(["exampleType"], function(ext) {
+      this.dict.exampleType = ext.exampleType;
+      this.dict.exampleTypeAll = Object.assign({...ext.exampleType}, ext.exampleTypeDis);
     });
-    this.queryPage();
     this.addForm.exampleType = 't';
-
   }
 }
 </script>
