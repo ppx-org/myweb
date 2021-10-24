@@ -58,6 +58,7 @@ let initConf = function(app) {
     // 不带自动loading的axios
     let commonAxios = axios.create({});
     commonAxios.defaults.baseURL = BASE_URL;
+    commonAxios.defaults.paramsSerializer = function(params) {return utils.stringify(params)};
     commonAxios.interceptors.request.use(
         config => {return getRequestConfig(config)},
         err => {console.log(err);return Promise.reject(err)}

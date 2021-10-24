@@ -8,6 +8,7 @@
     </el-form-item>
     <el-form-item label="类型" style="width:150px">
       <el-select v-model="form.exampleType" placeholder="类型">
+        <el-option label="全部" value=""></el-option>
         <el-option :key="v" v-for="(l,v) in dict.exampleType" :label="l" :value="v"></el-option>
       </el-select>
     </el-form-item>
@@ -109,7 +110,7 @@ export default {
       addFormV: false,
       editFormV: false,
       dict: {
-        exampleType: {'t': 'TYPE', 'y': 'YES'}
+        exampleType: {}
       }
     }
   },
@@ -147,10 +148,20 @@ export default {
         this.queryPage();
       })
     },
+    queryDict(dictType, callback) {
+      const params = {dictType:dictType};
+      this.commonAxios.get(`security/home/listDict`, {params}).then((res) => {
+        callback.call(this, res.data.content);
+      })
+    }
   },
   mounted() {
+    this.queryDict(["exampleType"], function(content) {
+      this.dict.exampleType = content.exampleType;
+    });
     this.queryPage();
     this.addForm.exampleType = 't';
+
   }
 }
 </script>
