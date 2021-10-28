@@ -159,4 +159,7 @@ export default {
 .my-input {
   width: 300px;
 }
+/deep/ .el-table__body tbody tr:hover>td {
+  background-color:white!important;
+}
 </style>
